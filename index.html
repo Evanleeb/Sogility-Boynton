@@ -3,784 +3,162 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Sogility · BC Commerce Center Building A · Boynton Beach, FL</title>
-<meta name="description" content="Proposed 20,673 SF Sogility training facility at BC Commerce Center Building A, 8255 Boynton Beach Blvd, Boynton Beach, Florida.">
+<title>Sogility Boynton Beach · Coming Soon</title>
+<meta name="description" content="Sogility is coming to Boynton Beach, Florida. Technology driven soccer training at BC Commerce Center, 8255 Boynton Beach Blvd.">
+<meta property="og:title" content="Sogility Boynton Beach · Coming Soon">
+<meta property="og:description" content="Technology driven soccer training. Two 80 x 50 technical zones, athlete development, and an outdoor futsal court.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
   :root{
-    --void:#0C0F11; --steel:#151A1D; --steel-2:#1D2428; --line:#2C3439; --line-2:#3D474D;
-    --bone:#EAE7DF; --dim:#8E979C; --volt:#C6F04B; --volt-dim:#7E9B2E; --clay:#CA8149;
+    --void:#0B0E10; --bone:#EAE7DF; --dim:#8E979C; --volt:#C6F04B; --line:#2C3439;
   }
   *{box-sizing:border-box}
-  html{scroll-behavior:smooth}
-  body{margin:0;background:var(--void);color:var(--bone);font-family:"Barlow",system-ui,sans-serif;
-    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
-  h1,h2,h3{font-family:"Barlow Condensed",Impact,sans-serif;text-transform:uppercase;
-    letter-spacing:.02em;font-weight:700;margin:0;line-height:.95}
-  .mono{font-family:"Roboto Mono",monospace;font-variant-numeric:tabular-nums}
-  a{color:var(--volt)}
+  html,body{height:100%}
+  body{margin:0;background:var(--void);color:var(--bone);overflow:hidden;
+    font-family:"Barlow",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 
-  #bar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;
-    align-items:center;gap:16px;padding:14px 22px;pointer-events:none;
-    background:linear-gradient(180deg,rgba(12,15,17,.92),rgba(12,15,17,.5) 70%,rgba(12,15,17,0))}
-  #bar .brand{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;
-    letter-spacing:.14em;text-transform:uppercase}
-  #bar .brand span{color:var(--volt)}
-  #bar .addr{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
-    text-align:right;line-height:1.7}
+  #scene{position:fixed;inset:0;z-index:0}
+  #scene canvas{display:block}
 
-  #stage{position:relative;height:100svh;min-height:560px;overflow:hidden;border-bottom:1px solid var(--line)}
-  #stage canvas{display:block}
-  #tags{position:absolute;inset:0;pointer-events:none;overflow:hidden}
-  .tag{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-size:10px;
-    letter-spacing:.1em;text-transform:uppercase;color:#F2F0EA;background:rgba(12,15,17,.7);
-    border:1px solid rgba(234,231,223,.16);border-radius:3px;padding:3px 7px;transition:opacity .25s}
-  .tag b{color:var(--volt);font-weight:500;margin-left:7px;font-family:"Roboto Mono",monospace}
-  #tags.off .tag{opacity:0}
+  /* the model reads as texture, not as the subject */
+  #veil{position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(120% 90% at 68% 42%, rgba(11,14,16,.20) 0%, rgba(11,14,16,.78) 58%, rgba(11,14,16,.96) 100%),
+      linear-gradient(90deg, rgba(11,14,16,.97) 0%, rgba(11,14,16,.72) 38%, rgba(11,14,16,.28) 100%)}
+  #grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;
+    background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px)}
 
-  #kicker{position:absolute;left:22px;bottom:118px;z-index:12;pointer-events:none;max-width:min(520px,72vw)}
-  #kicker .eyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--volt);margin-bottom:10px}
-  #kicker h1{font-size:clamp(34px,6.2vw,74px)}
-  #kicker p{margin:12px 0 0;color:var(--dim);font-size:14px;max-width:46ch}
+  #wrap{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;
+    justify-content:space-between;padding:34px 40px 0;pointer-events:none}
 
-  #dock{position:absolute;left:22px;right:22px;bottom:22px;z-index:14;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
-  .seg{display:flex;background:rgba(21,26,29,.92);border:1px solid var(--line);border-radius:4px;
-    overflow:hidden;backdrop-filter:blur(10px)}
-  .seg button{border:0;border-right:1px solid var(--line)}
-  .seg button:last-child{border-right:0}
-  button{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;
-    text-transform:uppercase;color:var(--bone);background:transparent;padding:9px 14px;cursor:pointer;
-    transition:background .15s,color .15s}
-  button:hover{background:var(--steel-2)}
-  button.on{background:var(--volt);color:#141709}
-  button:focus-visible{outline:2px solid var(--volt);outline-offset:2px}
+  .top{display:flex;justify-content:space-between;align-items:flex-start;gap:20px}
+  .mark{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:26px;
+    letter-spacing:.18em;text-transform:uppercase;line-height:1}
+  .mark span{color:var(--volt)}
+  .loc{font-family:"Roboto Mono",monospace;font-size:10.5px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);text-align:right;line-height:1.9}
 
-  #rail{position:absolute;right:22px;top:78px;z-index:12;width:252px;max-height:calc(100svh - 190px);
-    overflow:auto;display:flex;flex-direction:column;gap:5px}
-  #rail .rl{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin:0 0 5px 2px}
-  .zone{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;
-    background:rgba(21,26,29,.88);border:1px solid var(--line);border-left:2px solid var(--sw,var(--line-2));
-    border-radius:3px;padding:9px 11px;cursor:pointer;transition:border-color .15s,background .15s,transform .15s;
-    backdrop-filter:blur(10px)}
-  .zone:hover{background:var(--steel-2);transform:translateX(-3px)}
-  .zone.on{border-color:var(--volt);background:#222A18}
-  .zone .n{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
-    text-transform:uppercase;letter-spacing:.04em;line-height:1.15}
-  .zone .d{font-family:"Roboto Mono",monospace;font-size:10px;color:var(--dim);white-space:nowrap}
-
-  #hint{position:absolute;right:22px;bottom:24px;z-index:12;font-size:10px;letter-spacing:.14em;
-    text-transform:uppercase;color:#5F686D;pointer-events:none;text-align:right;line-height:1.9}
-  #boot{position:absolute;inset:0;z-index:25;display:grid;place-items:center;background:var(--void);transition:opacity .6s}
-  #boot.gone{opacity:0;pointer-events:none}
-  #boot div{font-family:"Barlow Condensed",sans-serif;font-size:12px;letter-spacing:.34em;
-    text-transform:uppercase;color:var(--dim)}
-
-  main{max-width:1120px;margin:0 auto;padding:72px 22px 96px}
-  .sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:10px}
-  .sechead h2{font-size:26px}
-  .sechead .num{font-family:"Roboto Mono",monospace;font-size:11px;color:var(--volt-dim)}
-  section{margin-bottom:64px}
-
-  table{width:100%;border-collapse:collapse;font-size:14px}
-  th{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;
-    color:var(--dim);text-align:left;font-weight:600;padding:0 12px 9px 0;border-bottom:1px solid var(--line)}
-  td{padding:11px 12px 11px 0;border-bottom:1px solid #1A2024;vertical-align:top}
-  td.num,th.num{text-align:right;font-family:"Roboto Mono",monospace;padding-right:0}
-  tr.tot td{border-bottom:0;border-top:1px solid var(--line-2);font-weight:600;padding-top:14px}
-  .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:9px}
-
-  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
-  .cell{background:var(--steel);padding:18px}
-  .cell .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
-  .cell .v{font-family:"Barlow Condensed",sans-serif;font-size:27px;font-weight:700;line-height:1}
-  .cell .v small{font-size:14px;color:var(--dim);font-weight:500;margin-left:5px}
-  .cell .note{font-size:12px;color:var(--dim);margin-top:7px}
-
-  .cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
-  .cols p{margin:0 0 13px}
-  .flag{border-left:2px solid var(--clay);padding:2px 0 2px 15px;color:var(--dim);font-size:14px}
-  .ok{color:var(--volt)}
-  footer{border-top:1px solid var(--line);padding:26px 22px 60px;text-align:center;color:#5F686D;
-    font-size:11px;letter-spacing:.1em;text-transform:uppercase}
-
-  @media (max-width:860px){
-    #rail,#hint{display:none}
-    #kicker{bottom:92px;left:16px}
-    #dock{left:14px;right:14px;bottom:14px;gap:6px}
-    button{padding:9px 11px;font-size:12px}
-    .cols{grid-template-columns:1fr;gap:22px}
-    main{padding:52px 16px 72px}
+  .mid{max-width:min(760px,86vw)}
+  .status{display:inline-flex;align-items:center;gap:9px;font-family:"Roboto Mono",monospace;
+    font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--volt);margin-bottom:20px}
+  .dot{width:6px;height:6px;border-radius:50%;background:var(--volt)}
+  @media (prefers-reduced-motion:no-preference){
+    .dot{animation:pulse 2.4s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
   }
-  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+
+  h1{font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;
+    margin:0;line-height:.84;letter-spacing:-.005em;font-size:clamp(56px,12.5vw,168px)}
+  h1 .l2{color:var(--volt)}
+  .rule{width:64px;height:2px;background:var(--volt);margin:28px 0 20px}
+  .blurb{font-size:16px;color:#B6BDC1;max-width:47ch;line-height:1.65;margin:0}
+
+  .facts{display:flex;flex-wrap:wrap;gap:0;margin:34px 0 0;border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line)}
+  .fact{padding:15px 30px 15px 0;margin-right:30px;border-right:1px solid var(--line)}
+  .fact:last-child{border-right:0;margin-right:0}
+  .fact b{display:block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:30px;line-height:1}
+  .fact span{font-family:"Roboto Mono",monospace;font-size:10px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--dim);display:block;margin-top:6px}
+
+  .cta{display:inline-flex;align-items:center;gap:11px;margin-top:32px;pointer-events:auto;
+    font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;letter-spacing:.13em;
+    text-transform:uppercase;color:var(--void);background:var(--volt);text-decoration:none;
+    padding:14px 24px;border-radius:3px;transition:transform .18s,background .18s}
+  .cta:hover{background:#D7FF63;transform:translateX(4px)}
+  .cta svg{width:15px;height:15px}
+
+  /* marquee, borrowed from Sogility's own homepage device */
+  .strip{position:relative;z-index:3;overflow:hidden;border-top:1px solid var(--line);
+    background:rgba(11,14,16,.82);backdrop-filter:blur(6px);margin:0 -40px}
+  .track{display:flex;white-space:nowrap;font-family:"Barlow Condensed",sans-serif;font-weight:700;
+    font-size:15px;letter-spacing:.34em;text-transform:uppercase;color:#39424A;padding:13px 0;width:max-content}
+  .track span{padding:0 26px}
+  .track span.hot{color:var(--volt)}
+  @media (prefers-reduced-motion:no-preference){
+    .track{animation:slide 34s linear infinite}
+    @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  }
+
+  #boot{position:fixed;inset:0;z-index:9;background:var(--void);display:grid;place-items:center;
+    transition:opacity .8s;font-family:"Roboto Mono",monospace;font-size:10px;
+    letter-spacing:.3em;text-transform:uppercase;color:#4A5359}
+  #boot.gone{opacity:0;pointer-events:none}
+
+  @media (max-width:820px){
+    #wrap{padding:22px 20px 0}
+    #veil{background:
+      radial-gradient(140% 80% at 60% 32%, rgba(11,14,16,.18) 0%, rgba(11,14,16,.8) 60%, rgba(11,14,16,.97) 100%),
+      linear-gradient(180deg, rgba(11,14,16,.6) 0%, rgba(11,14,16,.35) 30%, rgba(11,14,16,.92) 78%)}
+    .mark{font-size:20px}
+    .loc{font-size:9px}
+    .blurb{font-size:14.5px}
+    .facts{margin-top:22px}
+    .fact{padding:12px 18px 12px 0;margin-right:18px}
+    .fact b{font-size:22px}
+    .strip{margin:0 -20px}
+    .cta{margin-top:22px}
+  }
+  @media (max-height:700px) and (min-width:821px){
+    h1{font-size:clamp(48px,8vw,104px)}
+    .facts{margin-top:20px}
+  }
 </style>
 </head>
 <body>
 
-<div id="bar">
-  <div class="brand">SO<span>GILITY</span></div>
-  <div class="addr">BC Commerce Center &middot; Building A<br>8255 Boynton Beach Blvd &middot; Boynton Beach, FL</div>
+<div id="scene"></div>
+<div id="veil"></div>
+<div id="grain"></div>
+
+<div id="wrap">
+  <div class="top">
+    <div class="mark">SO<span>GILITY</span></div>
+    <div class="loc">BC Commerce Center &middot; Building A<br>8255 Boynton Beach Blvd<br>Boynton Beach, Florida</div>
+  </div>
+
+  <div class="mid">
+    <div class="status"><span class="dot"></span>Now in design</div>
+    <h1>Boynton<br><span class="l2">Beach</span></h1>
+    <div class="rule"></div>
+    <p class="blurb">Technology driven soccer training is coming to South Florida. Two full technical zones, a dedicated athlete development floor, and an outdoor futsal court, all under one roof at BC Commerce Center.</p>
+
+    <div class="facts">
+      <div class="fact"><b>20,673</b><span>Square feet</span></div>
+      <div class="fact"><b>2</b><span>80 x 50 zones</span></div>
+      <div class="fact"><b>4</b><span>Training grids</span></div>
+      <div class="fact"><b>1</b><span>Outdoor futsal court</span></div>
+    </div>
+
+    <a class="cta" href="plan.html">Walk the space
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+
+  <div class="strip">
+    <div class="track" id="track"></div>
+  </div>
 </div>
 
-<div id="stage">
-  <div id="tags"></div>
-  <div id="kicker">
-    <div class="eyebrow">Proposed facility &middot; Suites 650 + 600</div>
-    <h1>Train different.<br>Get better.</h1>
-    <p>20,673 SF under roof in a clear span end bay, plus a 2,484 SF futsal court on the truck court.</p>
-  </div>
-  <div id="rail"><div class="rl">Program</div></div>
-  <div id="dock">
-    <div class="seg" id="views">
-      <button data-view="aerial" class="on">Aerial</button>
-      <button data-view="entry">Entry</button>
-      <button data-view="tsz">Field level</button>
-      <button data-view="dev">Weight floor</button>
-      <button data-view="court">Futsal court</button>
-      <button data-view="plan">Plan</button>
-    </div>
-    <div class="seg">
-      <button id="b-walls">Full height</button>
-      <button id="b-tags" class="on">Labels</button>
-      <button id="b-people" class="on">People</button>
-    </div>
-  </div>
-  <div id="hint">Drag to orbit &middot; scroll to zoom<br>Shift drag to pan &middot; tap a space to fly to it</div>
-  <div id="boot"><div>Loading facility model</div></div>
-</div>
-
-<main>
-
-<section>
-  <div class="sechead"><span class="num">01</span><h2>The space</h2></div>
-  <div class="grid">
-    <div class="cell"><div class="k">Combined premises</div><div class="v">20,673 <small>SF</small></div>
-      <div class="note">Suite 650 at 13,349 SF plus Suite 600 at 7,324 SF, demising wall removed</div></div>
-    <div class="cell"><div class="k">Suite 650 clear span</div><div class="v">69'6" <small>x 192'6"</small></div>
-      <div class="note">No interior columns. The structural grid falls on the demising wall</div></div>
-    <div class="cell"><div class="k">Turf under roof</div><div class="v">10,400 <small>SF</small></div>
-      <div class="note">Two 80 x 50 zones and two 40 x 30 training grids</div></div>
-    <div class="cell"><div class="k">Outdoor futsal</div><div class="v">2,484 <small>SF</small></div>
-      <div class="note">39'9" x 62'5" on the truck court, overhead door access</div></div>
-  </div>
-</section>
-
-<section>
-  <div class="sechead"><span class="num">02</span><h2>Area schedule</h2></div>
-  <table>
-    <thead><tr><th>Space</th><th>Dimension</th><th class="num">Area</th></tr></thead>
-    <tbody id="sched"></tbody>
-  </table>
-</section>
-
-<section>
-  <div class="sechead"><span class="num">03</span><h2>Why this box works</h2></div>
-  <div class="cols">
-    <div>
-      <p><span class="ok">Suite 650 is a clear span end bay.</span> It runs 69'6" wide by 192'6" deep with no interior columns. The structural grid at 37'6" and 75'0" lands on the demising wall between 650 and 600, which puts the only two columns in the combined premises inside the circulation aisle between the technical zones and the training grids. Neither 80 x 50 field is obstructed.</p>
-      <p>That depth is what makes the plan work. The end bays of Building A run about 57 feet deeper than the middle bays, so two full 80 x 50 zones stack end to end with room left over for the restroom block on the north wall.</p>
-    </div>
-    <div>
-      <p>Suite 600 carries everything that needs walls. The party room sits on the north end where parents see the entry, the two private offices sit behind it, the athlete development floor holds the middle, and the two 40 x 30 grids run south.</p>
-      <p>Overhead doors on the south wall open onto the futsal court, so the indoor and outdoor training areas run as one facility rather than two.</p>
-      <p class="flag">Shell dimensions, the suite split, the structural grid and the restroom block were taken off Arcadis leasing plan AS1.01 dated 3/7/2024. Clear height and the plumbing fixture count still need confirmation against the permit set.</p>
-    </div>
-  </div>
-</section>
-
-</main>
-
-<footer>Prepared by Butters Construction &amp; Development &middot; Schematic space plan, not for construction</footer>
+<div id="boot">Loading</div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="model.js"></script>
 <script>
 (function(){
-"use strict";
+  var words = ['Technical Soccer Zone','TechTouch','Circuit Training','On The Ball','Athlete Development','Vision Training'];
+  var track = document.getElementById('track'), html = '';
+  for (var pass = 0; pass < 2; pass++)
+    for (var i = 0; i < words.length; i++)
+      html += '<span' + (i % 3 === 1 ? ' class="hot"' : '') + '>' + words[i] + '</span><span>&middot;</span>';
+  track.innerHTML = html;
 
-/* =========================================================
-   GEOMETRY, in feet. Origin at the northwest corner of
-   Suite 650. x runs east, z runs south.
-
-   Verified against the Arcadis AS1.01 vector geometry:
-     building        680'6" long x 192'6" deep
-     end bays        69'6" wide, full 192'6" depth
-     middle bays     54'0" wide, 135'8" depth
-     column grid     37'6" and 75'0" off the north wall,
-                     landing on the demising lines
-   ========================================================= */
-var S650 = {x:0,    z:0, w:69.5, d:192.5};
-var S600 = {x:69.5, z:0, w:54,   d:135.7};
-var CUT = 15, FULL = 32;
-var GRID_Z = [37.5, 75];
-
-var ZONES = [
-  {id:'tsz-a',  name:'Technical Soccer Zone A', dim:'80 x 50', sf:4000, x:9.75, z:18.7,  w:50, d:80, kind:'turf',  col:'#5C9B47'},
-  {id:'tsz-b',  name:'Technical Soccer Zone B', dim:'80 x 50', sf:4000, x:9.75, z:100.7, w:50, d:80, kind:'turf',  col:'#5C9B47'},
-  {id:'grid-1', name:'Training grid 1',         dim:'40 x 30', sf:1200, x:80.4, z:74,    w:40, d:30, kind:'turf',  col:'#6FAE55'},
-  {id:'grid-2', name:'Training grid 2',         dim:'40 x 30', sf:1200, x:80.4, z:105,   w:40, d:30, kind:'turf',  col:'#6FAE55'},
-  {id:'dev',    name:'Athlete development',     dim:'43-6 x 27', sf:1175, x:79.5, z:45,  w:43.5, d:27, kind:'gym',  col:'#C6F04B'},
-  {id:'party',  name:'Break / party room',      dim:'25 people', sf:809, x:69.5, z:0,    w:40.3, d:20.1, kind:'wood', col:'#CA8149'},
-  {id:'entry',  name:'Entry / check in',        dim:'13-8 x 20', sf:275, x:109.8, z:0,   w:13.7, d:20.1, kind:'carpet', col:'#B9AFA0'},
-  {id:'off-1',  name:'Private office 1',        dim:'10 x 10', sf:100,  x:112.5, z:22,   w:10, d:10, kind:'carpet', col:'#B9AFA0'},
-  {id:'off-2',  name:'Private office 2',        dim:'10 x 10', sf:100,  x:112.5, z:33,   w:10, d:10, kind:'carpet', col:'#B9AFA0'},
-  {id:'wc',     name:'Restrooms',               dim:'4 at 49 SF', sf:196, x:32.5, z:0,   w:26, d:7.4, kind:'tile', col:'#9FB6C2'},
-  {id:'futsal', name:'Outdoor futsal court',    dim:'39-9 x 62-5', sf:2484, x:69.5, z:135.7, w:39.8, d:62.4, kind:'turf', col:'#4E8C3C'}
-];
-
-var COL = {
-  slab:0xD6D3C9, apron:0x63686C, ground:0x8B9380,
-  turf:0x3E7A3B, turfB:0x477F3F, stripe:0xF0F4EC,
-  gym:0x2C3137, rubber:0x191C20, tile:0xC3CBD1, wood:0xC3A26C, carpet:0xBAB1A3,
-  wall:0xEBE8E2, wallOut:0xD9D6CE, metal:0x848C93, glass:0x9CC0D4,
-  dark:0x3F4449, steel:0x596069, chrome:0xB9BFC4, volt:0xC6F04B
-};
-
-var scene, camera, renderer, root, extWalls = [], people = [], tags = [], hi = null, hiT = 0;
-var tagsEl = document.getElementById('tags'), stage = document.getElementById('stage');
-var cam = {r:310, phi:0.60, theta:1.02, tx:60, ty:8, tz:98}, goal = null;
-
-var VIEWS = {
-  aerial:{r:310, phi:0.60, theta:1.02, tx:60,  ty:8, tz:98},
-  entry: {r:74,  phi:1.44, theta:1.78, tx:106, ty:6, tz:26},
-  tsz:   {r:104, phi:1.38, theta:0.62, tx:35,  ty:5, tz:60},
-  dev:   {r:70,  phi:1.34, theta:1.95, tx:101, ty:5, tz:58},
-  court: {r:124, phi:1.14, theta:0.90, tx:89,  ty:4, tz:167},
-  plan:  {r:284, phi:0.13, theta:1.0,  tx:60,  ty:0, tz:98}
-};
-
-function M(c, o){
-  o = o || {};
-  return new THREE.MeshStandardMaterial({color:c,
-    roughness:o.rough !== undefined ? o.rough : 0.9,
-    metalness:o.metal !== undefined ? o.metal : 0.02,
-    transparent:o.opacity !== undefined, opacity:o.opacity !== undefined ? o.opacity : 1});
-}
-function B(x, z, w, d, h, m, y0, g){
-  var me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
-  me.position.set(x + w/2, (y0 || 0) + h/2, z + d/2);
-  me.castShadow = true; me.receiveShadow = true;
-  (g || root).add(me); return me;
-}
-function CYL(x, y, z, r, h, m, g, lay){
-  var me = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 12), m);
-  me.position.set(x, y, z);
-  if (lay) me.rotation.z = Math.PI/2;
-  me.castShadow = true; (g || root).add(me); return me;
-}
-function P(x, z, w, d, m, y){
-  var gg = new THREE.PlaneGeometry(w, d); gg.rotateX(-Math.PI/2);
-  var me = new THREE.Mesh(gg, m);
-  me.position.set(x + w/2, y || 0.06, z + d/2);
-  me.receiveShadow = true; root.add(me); return me;
-}
-
-/* ---------------- equipment ---------------- */
-function squatRack(x, z){
-  var g = new THREE.Group(); root.add(g);
-  var post = M(COL.steel, {rough:0.4, metal:0.55});
-  var bar = M(COL.chrome, {rough:0.25, metal:0.85});
-  var plate = M(0x1A1D21, {rough:0.85});
-  var W = 4, D = 3.6, H = 8;
-  [[0,0],[W-0.35,0],[0,D-0.35],[W-0.35,D-0.35]].forEach(function(p){
-    B(x + p[0], z + p[1], 0.35, 0.35, H, post, 0, g);
-  });
-  B(x, z, W, 0.3, 0.3, post, H - 0.3, g);
-  B(x, z + D - 0.3, W, 0.3, 0.3, post, H - 0.3, g);
-  B(x, z, 0.3, D, 0.3, post, H - 0.3, g);
-  B(x, z + 0.6, W, 0.25, 0.25, post, 2.2, g);
-  B(x, z + D - 0.85, W, 0.25, 0.25, post, 2.2, g);
-  CYL(x + W/2, 4.1, z + 0.9, 0.09, 6.4, bar, g, true);
-  [-2.35, -2.05, 2.05, 2.35].forEach(function(o){
-    var d = new THREE.Mesh(new THREE.CylinderGeometry(0.75, 0.75, 0.16, 20), plate);
-    d.position.set(x + W/2 + o, 4.1, z + 0.9);
-    d.rotation.z = Math.PI/2; d.castShadow = true; g.add(d);
-  });
-}
-function dbRack(x, z, n){
-  var frame = M(0x2A2E33, {rough:0.5, metal:0.4});
-  var db = M(0x33383D, {rough:0.6, metal:0.3});
-  B(x, z, n*1.5 + 0.6, 2.4, 0.3, frame, 1.5);
-  B(x, z, n*1.5 + 0.6, 2.4, 0.3, frame, 0.55);
-  B(x, z, 0.4, 2.4, 1.9, frame);
-  B(x + n*1.5 + 0.2, z, 0.4, 2.4, 1.9, frame);
-  for (var i = 0; i < n; i++){
-    CYL(x + 0.9 + i*1.5, 2.05, z + 0.85, 0.3, 1.5, db, null, true);
-    CYL(x + 0.9 + i*1.5, 1.1, z + 0.85, 0.25, 1.2, db, null, true);
-  }
-}
-function plyoStack(x, z){
-  var m = M(0x4A5158, {rough:0.8});
-  B(x, z, 2.6, 2.2, 1.7, m);
-  B(x + 3, z, 2.2, 2.0, 2.4, m);
-  B(x + 5.6, z, 1.8, 1.8, 3.0, m);
-}
-function goal(x, z, w, deep){
-  var g = new THREE.Group(); root.add(g);
-  var post = M(0xF0F2F4, {rough:0.35, metal:0.15});
-  var net = new THREE.MeshBasicMaterial({color:0xE9EEE8, transparent:true, opacity:0.17, side:THREE.DoubleSide});
-  var H = w > 16 ? 8 : 6.5, dd = deep || 3;
-  B(x, z, 0.35, 0.35, H, post, 0, g);
-  B(x + w - 0.35, z, 0.35, 0.35, H, post, 0, g);
-  B(x, z, w, 0.35, 0.35, post, H - 0.35, g);
-  var back = new THREE.Mesh(new THREE.BoxGeometry(w, H, 0.08), net);
-  back.position.set(x + w/2, H/2, z + dd); g.add(back);
-  var top = new THREE.Mesh(new THREE.BoxGeometry(w, 0.08, dd), net);
-  top.position.set(x + w/2, H, z + dd/2); g.add(top);
-  [0, w].forEach(function(o){
-    var s = new THREE.Mesh(new THREE.BoxGeometry(0.08, H, dd), net);
-    s.position.set(x + o, H/2, z + dd/2); g.add(s);
-  });
-}
-function ballCart(x, z){
-  var f = M(0x3C4147, {rough:0.6, metal:0.3});
-  B(x, z, 3.2, 3.2, 0.3, f, 0.9);
-  [[0,0],[2.9,0],[0,2.9],[2.9,2.9]].forEach(function(p){ B(x+p[0], z+p[1], 0.3, 0.3, 0.9, f); });
-  var ball = M(0xF2F4F6, {rough:0.65});
-  for (var i = 0; i < 7; i++){
-    var b = new THREE.Mesh(new THREE.SphereGeometry(0.36, 12, 10), ball);
-    b.position.set(x + 0.7 + (i % 3) * 1.0, 1.5 + Math.floor(i/3) * 0.7, z + 0.8 + (i % 2) * 1.1);
-    b.castShadow = true; root.add(b);
-  }
-}
-function bench(x, z, len, vert){
-  var w = M(0x8E877A, {rough:0.85}), f = M(0x33383D, {rough:0.5, metal:0.4});
-  var a = vert ? 2 : len, b = vert ? len : 2;
-  B(x, z, a, b, 0.3, w, 1.35);
-  if (vert) B(x, z, 0.25, b, 1.5, w, 1.6); else B(x, z, a, 0.25, 1.5, w, 1.6);
-  B(x, z, 0.3, 0.3, 1.35, f);
-  B(x + a - 0.3, z + b - 0.3, 0.3, 0.3, 1.35, f);
-}
-function screen(x, z, w, vert){
-  var m = M(0x14171A, {rough:0.25, metal:0.2});
-  var s = M(0x1D2A33, {rough:0.1, metal:0.4});
-  if (vert){ B(x, z, 0.3, w, 3.4, m, 7); B(x + 0.31, z + 0.15, 0.06, w - 0.3, 3.1, s, 7.15); }
-  else { B(x, z, w, 0.3, 3.4, m, 7); B(x + 0.15, z + 0.31, w - 0.3, 0.06, 3.1, s, 7.15); }
-}
-function padding(x, z, w, d){ B(x, z, w, d, 4, M(0x2E3A45, {rough:0.9})); }
-function table(x, z, w, d, seats){
-  var t = M(0xAE8A56, {rough:0.55}), leg = M(0x4A5057, {rough:0.5, metal:0.4});
-  B(x, z, w, d, 0.25, t, 2.4);
-  [[0.3,0.3],[w-0.6,0.3],[0.3,d-0.6],[w-0.6,d-0.6]].forEach(function(p){ B(x+p[0], z+p[1], 0.3, 0.3, 2.4, leg); });
-  var ch = M(0x3F454C, {rough:0.7});
-  for (var i = 0; i < seats; i++){
-    var cx = x + 0.9 + i * ((w - 2.4) / Math.max(1, seats - 1));
-    B(cx, z - 1.8, 1.5, 1.5, 0.2, ch, 1.5);
-    B(cx, z - 1.85, 1.5, 0.2, 1.5, ch, 1.7);
-    B(cx, z + d + 0.3, 1.5, 1.5, 0.2, ch, 1.5);
-    B(cx, z + d + 1.6, 1.5, 0.2, 1.5, ch, 1.7);
-  }
-}
-function person(x, z, kitCol){
-  var g = new THREE.Group(); root.add(g); people.push(g);
-  var skin = M(0xC49A78, {rough:0.9}), kit = M(kitCol, {rough:0.85}), leg = M(0x2A2E33, {rough:0.85});
-  CYL(x, 3.35, z, 0.5, 2.0, kit, g);
-  CYL(x - 0.25, 1.15, z, 0.19, 2.3, leg, g);
-  CYL(x + 0.25, 1.15, z, 0.19, 2.3, leg, g);
-  var head = new THREE.Mesh(new THREE.SphereGeometry(0.42, 12, 10), skin);
-  head.position.set(x, 4.7, z); head.castShadow = true; g.add(head);
-  CYL(x - 0.65, 3.5, z, 0.15, 1.7, kit, g);
-  CYL(x + 0.65, 3.5, z, 0.15, 1.7, kit, g);
-}
-function highBay(x, z){
-  B(x, z, 2.2, 1.2, 0.5, M(0x2F343A, {rough:0.5, metal:0.4}), 27.5);
-  B(x + 0.15, z + 0.1, 1.9, 1.0, 0.1, new THREE.MeshBasicMaterial({color:0xFFF6E2}), 27.4);
-}
-function cone(x, z){ B(x, z, 1.1, 1.1, 1.5, M(0xD9721F, {rough:0.9})); }
-function ladder(x, z, n){
-  var m = M(0xE8B33A, {rough:0.9});
-  for (var i = 0; i <= n; i++) P(x, z + i*1.5, 2.6, 0.18, m, 0.13);
-  P(x, z, 0.15, n*1.5, m, 0.13);
-  P(x + 2.45, z, 0.15, n*1.5, m, 0.13);
-}
-
-/* ---------------- scene ---------------- */
-function init(){
-  scene = new THREE.Scene();
-  scene.background = new THREE.Color(0x0C0F11);
-  scene.fog = new THREE.Fog(0x0C0F11, 560, 1300);
-  camera = new THREE.PerspectiveCamera(38, stage.clientWidth / stage.clientHeight, 1, 3000);
-
-  renderer = new THREE.WebGLRenderer({antialias:true});
-  renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
-  renderer.setSize(stage.clientWidth, stage.clientHeight);
-  renderer.shadowMap.enabled = true;
-  renderer.shadowMap.type = THREE.PCFSoftShadowMap;
-  renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.toneMapping = THREE.ACESFilmicToneMapping;
-  renderer.toneMappingExposure = 1.08;
-  stage.insertBefore(renderer.domElement, tagsEl);
-
-  scene.add(new THREE.HemisphereLight(0xEFF4FF, 0x4E5448, 0.72));
-  var sun = new THREE.DirectionalLight(0xFFF4E4, 1.12);
-  sun.position.set(280, 330, 230); sun.castShadow = true;
-  sun.shadow.mapSize.set(2048, 2048);
-  var sc = sun.shadow.camera;
-  sc.left = -230; sc.right = 230; sc.top = 230; sc.bottom = -230; sc.near = 20; sc.far = 950;
-  sun.shadow.bias = -0.0009;
-  var t = new THREE.Object3D(); t.position.set(60, 0, 98); scene.add(t);
-  sun.target = t; scene.add(sun);
-  var fill = new THREE.DirectionalLight(0xC9D8E8, 0.3);
-  fill.position.set(-220, 160, -150); scene.add(fill);
-
-  root = new THREE.Group(); scene.add(root);
-
-  buildSite(); buildZones(); buildShell(); buildFitOut();
-  buildTags(); buildRail(); buildSchedule();
-
-  addEventListener('resize', onResize);
-  bindOrbit(); bindUI(); animate();
-  setTimeout(function(){ document.getElementById('boot').classList.add('gone'); }, 450);
-}
-
-function buildSite(){
-  var g = new THREE.PlaneGeometry(2600, 2600); g.rotateX(-Math.PI/2);
-  var m = new THREE.Mesh(g, M(COL.ground, {rough:1}));
-  m.position.set(60, -0.6, 98); m.receiveShadow = true; scene.add(m);
-  P(-52, 135.7, 240, 92, M(COL.apron, {rough:1}), -0.25);
-  P(-52, -74, 290, 70, M(COL.apron, {rough:1}), -0.25);
-  B(S650.x, S650.z, S650.w, S650.d, 1, M(COL.slab, {rough:0.96}), -1);
-  B(S600.x, S600.z, S600.w, S600.d, 1, M(COL.slab, {rough:0.96}), -1);
-}
-
-function stripes(x, z, w, d){
-  var m = M(COL.stripe, {rough:1}), i = 2.5, t = 0.5;
-  P(x+i, z+i, w-2*i, t, m, 0.11);
-  P(x+i, z+d-i-t, w-2*i, t, m, 0.11);
-  P(x+i, z+i, t, d-2*i, m, 0.11);
-  P(x+w-i-t, z+i, t, d-2*i, m, 0.11);
-  P(x+i, z+d/2, w-2*i, t, m, 0.11);
-  var r = Math.min(w, d) * 0.14;
-  var ring = new THREE.Mesh(new THREE.RingGeometry(r - 0.3, r, 44).rotateX(-Math.PI/2), m);
-  ring.position.set(x + w/2, 0.11, z + d/2); root.add(ring);
-}
-
-function buildZones(){
-  ZONES.forEach(function(z){
-    var m = z.kind === 'turf' ? M(z.id === 'futsal' ? COL.turfB : COL.turf, {rough:1})
-      : z.kind === 'gym' ? M(COL.gym, {rough:0.84})
-      : z.kind === 'tile' ? M(COL.tile, {rough:0.45})
-      : z.kind === 'wood' ? M(COL.wood, {rough:0.68}) : M(COL.carpet, {rough:0.98});
-    z.mesh = P(z.x, z.z, z.w, z.d, m);
-    if (z.kind === 'turf') stripes(z.x, z.z, z.w, z.d);
-    var glow = new THREE.Mesh(new THREE.PlaneGeometry(z.w, z.d).rotateX(-Math.PI/2),
-      new THREE.MeshBasicMaterial({color:COL.volt, transparent:true, opacity:0}));
-    glow.position.set(z.x + z.w/2, 0.2, z.z + z.d/2);
-    root.add(glow); z.glow = glow;
-  });
-}
-
-function netting(x, z, w, d, h){
-  var m = new THREE.MeshBasicMaterial({color:0xE6EDE2, transparent:true, opacity:0.085, side:THREE.DoubleSide});
-  var mk = function(px, pz, pw, pd){
-    var me = new THREE.Mesh(new THREE.BoxGeometry(pw, h, pd), m);
-    me.position.set(px + pw/2, h/2, pz + pd/2); root.add(me);
-  };
-  mk(x, z, w, 0.3); mk(x, z + d - 0.3, w, 0.3);
-  mk(x, z, 0.3, d); mk(x + w - 0.3, z, 0.3, d);
-  var post = M(0x353B41, {rough:0.55, metal:0.35});
-  [[x,z],[x+w-0.5,z],[x,z+d-0.5],[x+w-0.5,z+d-0.5]].forEach(function(p){ B(p[0], p[1], 0.5, 0.5, h, post); });
-}
-
-function extWall(x, z, w, d){
-  var g = new THREE.BoxGeometry(w, FULL, d); g.translate(0, FULL/2, 0);
-  var me = new THREE.Mesh(g, M(COL.wallOut, {rough:0.96}));
-  me.position.set(x + w/2, 0, z + d/2);
-  me.scale.y = CUT / FULL;
-  me.castShadow = true; me.receiveShadow = true;
-  root.add(me); extWalls.push(me);
-}
-
-function dasher(x, z, w, d){
-  var m = M(COL.dark, {rough:0.76}), h = 3.5, t = 0.5;
-  B(x, z, w, t, h, m); B(x, z+d-t, w, t, h, m);
-  B(x, z, t, d, h, m); B(x+w-t, z, t, d, h, m);
-}
-
-function buildShell(){
-  var T = 0.83;
-  extWall(0, 0, S650.w + S600.w, T);
-  extWall(0, T, T, S650.d - T);
-  extWall(0, S650.d - T, S650.w, T);
-  extWall(S650.w, S600.d - T, S600.w, T);
-  extWall(S650.w - T, S600.d, T, S650.d - S600.d - T);
-  extWall(S650.w + S600.w - T, T, T, S600.d - 2*T);
-
-  GRID_Z.forEach(function(z){
-    [S650.w, S650.w + S600.w].forEach(function(x){
-      var g = new THREE.BoxGeometry(1.6, FULL, 1.6); g.translate(0, FULL/2, 0);
-      var me = new THREE.Mesh(g, M(0xCBC7BE, {rough:0.88}));
-      me.position.set(x, 0, z); me.scale.y = CUT / FULL;
-      me.castShadow = true; root.add(me); extWalls.push(me);
-    });
-  });
-
-  var p = M(COL.wall, {rough:0.94});
-  for (var i = 0; i < 5; i++) B(32.5 + i*6.5, 0, 0.5, 7.4, 9, p);
-  B(32.5, 7.4, 26, 0.5, 9, p);
-  B(69.5, 20.1, 40.3, 0.5, 9, p);
-  B(109.3, 0, 0.5, 20.1, 9, p);
-  B(111.5, 21, 0.5, 23, 9, p);
-  B(112, 21, 11, 0.5, 9, p);
-  B(112, 32, 11, 0.5, 9, p);
-  B(112, 32.9, 11, 0.5, 9, p);
-  B(112, 43.4, 11, 0.5, 9, p);
-
-  var door = M(COL.metal, {rough:0.5, metal:0.45});
-  [76, 96].forEach(function(x){ B(x, S600.d - 1.1, 14, 0.7, 14, door); });
-  [14, 42].forEach(function(x){ B(x, S650.d - 1.1, 14, 0.7, 14, door); });
-  B(111, 0.1, 11, 0.6, 10, M(COL.glass, {rough:0.14, metal:0.15, opacity:0.38}));
-
-  dasher(9.75, 18.7, 50, 80); dasher(9.75, 100.7, 50, 80);
-  netting(9.75, 18.7, 50, 80, 15); netting(9.75, 100.7, 50, 80, 15);
-  netting(80.4, 74, 40, 30, 12); netting(80.4, 105, 40, 30, 12);
-  netting(69.5, 135.7, 39.8, 62.4, 16);
-
-  var dl = new THREE.Mesh(new THREE.PlaneGeometry(0.7, S600.d - 2).rotateX(-Math.PI/2),
-    new THREE.MeshBasicMaterial({color:0xCA8149, transparent:true, opacity:0.6}));
-  dl.position.set(69.5, 0.25, S600.d/2); root.add(dl);
-
-  for (var hx = 13; hx < 122; hx += 22)
-    for (var hz = 20; hz < 188; hz += 30)
-      if (hx < 64 || hz < 132) highBay(hx, hz);
-}
-
-function buildFitOut(){
-  squatRack(81.5, 47); squatRack(88, 47); squatRack(94.5, 47);
-  dbRack(81.5, 66, 8);
-  plyoStack(104.5, 47.5);
-  B(100, 57, 16, 4, 0.55, M(COL.rubber, {rough:0.92}), 0.02);
-  B(114.5, 47, 6.5, 5, 3.2, M(0x3A4046, {rough:0.6, metal:0.3}));
-  screen(81.5, 45.3, 9); screen(97, 45.3, 9);
-
-  goal(24.75, 19.4, 20, 3.5); goal(24.75, 95.2, 20, 3.5);
-  goal(24.75, 101.4, 20, 3.5); goal(24.75, 177.2, 20, 3.5);
-  padding(9.75, 18.7, 50, 1.2); padding(9.75, 97.5, 50, 1.2);
-  padding(9.75, 100.7, 50, 1.2); padding(9.75, 179.5, 50, 1.2);
-  ballCart(62.5, 26); ballCart(62.5, 110);
-  ladder(63, 62, 6);
-  [30, 40, 50].forEach(function(x){ cone(x, 63); });
-  screen(9.9, 40, 8, true); screen(9.9, 124, 8, true);
-
-  goal(93.4, 74.6, 14, 2.6); goal(93.4, 101.4, 14, 2.6);
-  goal(93.4, 105.6, 14, 2.6); goal(93.4, 132.4, 14, 2.6);
-  ballCart(75.5, 78);
-
-  goal(80.4, 136.4, 18, 3); goal(80.4, 195.1, 18, 3);
-
-  [26, 46, 118, 138].forEach(function(z){ bench(63.8, z, 14, true); });
-  bench(72.5, 96, 12, false);
-
-  table(72, 4, 16, 4, 5); table(72, 13.5, 16, 4, 5);
-  B(92, 3, 3.5, 14, 3.4, M(0xA89272, {rough:0.55}));
-  B(112, 3, 3.5, 9, 3.4, M(0xA89272, {rough:0.55}));
-  bench(114.5, 14.5, 7, false);
-  B(113.5, 23.5, 6, 3, 2.5, M(0xA89272, {rough:0.55}));
-  B(113.5, 34.5, 6, 3, 2.5, M(0xA89272, {rough:0.55}));
-
-  var fx = M(0xE9EEF1, {rough:0.35});
-  for (var i = 0; i < 4; i++){
-    B(33.4 + i*6.5, 5.3, 1.5, 1.9, 1.4, fx);
-    B(36.4 + i*6.5, 0.7, 2.2, 1.4, 2.7, fx);
-  }
-
-  var kits = [0xC6F04B, 0x2E6FBF, 0xD84A3A, 0xEFEFEF, 0x2B2E33];
-  var spots = [
-    [22,34],[27,38],[34,33],[40,44],[30,52],[45,60],[20,70],[38,80],[50,72],[44,90],
-    [24,118],[33,126],[41,120],[28,140],[46,150],[36,162],[22,155],[50,134],
-    [85,52],[90,50],[97,52],[103,60],[84,68],
-    [88,82],[96,88],[104,84],[90,116],[100,120],[110,112],
-    [65,30],[66,52],[65,100],[66,132],
-    [78,8],[84,10],[90,16],[112,8],[116,12],
-    [78,150],[86,160],[95,168],[80,180],[92,186],[74,170]
-  ];
-  spots.forEach(function(s, i){ person(s[0], s[1], kits[i % kits.length]); });
-}
-
-function buildTags(){
-  ZONES.forEach(function(z){
-    if (z.sf < 190) return;
-    var el = document.createElement('div');
-    el.className = 'tag'; el.innerHTML = z.name + '<b>' + z.dim + '</b>';
-    tagsEl.appendChild(el);
-    tags.push({el:el, v:new THREE.Vector3(z.x + z.w/2, 3, z.z + z.d/2)});
-  });
-  [['Suite 650 · 13,349 SF', 34, 188], ['Suite 600 · 7,324 SF', 96, 130]].forEach(function(t){
-    var el = document.createElement('div');
-    el.className = 'tag'; el.innerHTML = t[0];
-    tagsEl.appendChild(el);
-    tags.push({el:el, v:new THREE.Vector3(t[1], 26, t[2])});
-  });
-}
-function updateTags(){
-  if (tagsEl.classList.contains('off')) return;
-  var w = stage.clientWidth, h = stage.clientHeight;
-  tags.forEach(function(t){
-    var p = t.v.clone().project(camera);
-    var vis = p.z < 1 && Math.abs(p.x) < 1.05 && Math.abs(p.y) < 1.05;
-    t.el.style.display = vis ? 'block' : 'none';
-    if (vis){
-      t.el.style.left = ((p.x + 1) / 2 * w) + 'px';
-      t.el.style.top = ((-p.y + 1) / 2 * h) + 'px';
-    }
-  });
-}
-function buildRail(){
-  var rail = document.getElementById('rail');
-  ZONES.forEach(function(z){
-    if (z.sf < 190) return;
-    var b = document.createElement('button');
-    b.className = 'zone'; b.style.setProperty('--sw', z.col); b.dataset.zid = z.id;
-    b.innerHTML = '<span class="n">' + z.name + '</span><span class="d">' + z.sf.toLocaleString() + ' SF</span>';
-    b.addEventListener('click', function(){ focus(z, b); });
-    rail.appendChild(b);
-  });
-}
-function buildSchedule(){
-  var body = document.getElementById('sched'), tot = 0;
-  ZONES.forEach(function(z){
-    tot += z.sf;
-    var tr = document.createElement('tr');
-    tr.innerHTML = '<td><span class="sw" style="background:' + z.col + '"></span>' + z.name + '</td>' +
-      '<td class="mono" style="color:#8E979C">' + z.dim + '</td>' +
-      '<td class="num">' + z.sf.toLocaleString() + '</td>';
-    body.appendChild(tr);
-  });
-  var c = document.createElement('tr');
-  c.innerHTML = '<td><span class="sw" style="background:#3D474D"></span>Circulation, benches and back of house</td>' +
-    '<td class="mono" style="color:#8E979C">balance</td>' +
-    '<td class="num">' + (20673 - (tot - 2484)).toLocaleString() + '</td>';
-  body.appendChild(c);
-  var t = document.createElement('tr');
-  t.className = 'tot';
-  t.innerHTML = '<td>Total, under roof</td><td class="mono" style="color:#8E979C">Suites 650 + 600</td><td class="num">20,673</td>';
-  body.appendChild(t);
-}
-
-function focus(z, btn){
-  document.querySelectorAll('.zone').forEach(function(o){ o.classList.remove('on'); });
-  if (btn) btn.classList.add('on');
-  document.querySelectorAll('#views button').forEach(function(o){ o.classList.remove('on'); });
-  goal = {r:Math.max(56, Math.max(z.w, z.d) * 1.7), phi:1.06,
-    theta:(z.x + z.w/2) > 72 ? 1.92 : 0.70, tx:z.x + z.w/2, ty:4, tz:z.z + z.d/2};
-  hi = z; hiT = 0;
-}
-function setView(name, btn){
-  goal = Object.assign({}, VIEWS[name]);
-  document.querySelectorAll('#views button').forEach(function(o){ o.classList.remove('on'); });
-  if (btn) btn.classList.add('on');
-  document.querySelectorAll('.zone').forEach(function(o){ o.classList.remove('on'); });
-  hi = null;
-}
-function step(){
-  if (goal){
-    var done = true;
-    ['r','phi','theta','tx','ty','tz'].forEach(function(k){
-      var d = goal[k] - cam[k];
-      if (Math.abs(d) > 0.004) done = false;
-      cam[k] += d * 0.075;
-    });
-    if (done) goal = null;
-  }
-  cam.phi = Math.max(0.07, Math.min(Math.PI/2 - 0.03, cam.phi));
-  camera.position.set(
-    cam.tx + cam.r * Math.sin(cam.phi) * Math.cos(cam.theta),
-    Math.max(2.5, cam.ty + cam.r * Math.cos(cam.phi)),
-    cam.tz + cam.r * Math.sin(cam.phi) * Math.sin(cam.theta));
-  camera.lookAt(cam.tx, cam.ty, cam.tz);
-  ZONES.forEach(function(z){
-    var target = (hi && hi.id === z.id) ? 0.16 + Math.sin(hiT) * 0.07 : 0;
-    z.glow.material.opacity += (target - z.glow.material.opacity) * 0.12;
-  });
-  hiT += 0.05;
-}
-
-function bindOrbit(){
-  var el = renderer.domElement, down = false, sx = 0, sy = 0, pan = false, moved = 0, pinch = 0;
-  function pick(cx, cy){
-    var r = el.getBoundingClientRect();
-    var v = new THREE.Vector2(((cx - r.left)/r.width)*2 - 1, -((cy - r.top)/r.height)*2 + 1);
-    var rc = new THREE.Raycaster(); rc.setFromCamera(v, camera);
-    var hits = rc.intersectObjects(ZONES.map(function(z){ return z.mesh; }));
-    if (hits.length){
-      var z = ZONES.filter(function(q){ return q.mesh === hits[0].object; })[0];
-      focus(z, document.querySelector('.zone[data-zid="' + z.id + '"]'));
-    }
-  }
-  el.addEventListener('mousedown', function(e){
-    down = true; sx = e.clientX; sy = e.clientY; moved = 0; pan = e.shiftKey || e.button === 2; goal = null;
-  });
-  addEventListener('mousemove', function(e){
-    if (!down) return;
-    var dx = e.clientX - sx, dy = e.clientY - sy;
-    sx = e.clientX; sy = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
-    if (pan){
-      var k = cam.r * 0.0016, ct = Math.cos(cam.theta), st = Math.sin(cam.theta);
-      cam.tx += -dx*ct*k + dy*st*k*0.6;
-      cam.tz += -dx*st*k - dy*ct*k*0.6;
-    } else { cam.theta -= dx * 0.005; cam.phi -= dy * 0.004; }
-  });
-  addEventListener('mouseup', function(e){
-    if (down && moved < 5) pick(e.clientX, e.clientY);
-    down = false; pan = false;
-  });
-  el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
-  el.addEventListener('wheel', function(e){
-    e.preventDefault(); goal = null;
-    cam.r = Math.max(28, Math.min(760, cam.r * (1 + Math.sign(e.deltaY) * 0.085)));
-  }, {passive:false});
-  el.addEventListener('touchstart', function(e){
-    if (e.touches.length === 1){ down = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved = 0; goal = null; }
-    else if (e.touches.length === 2){ down = false;
-      pinch = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY); }
-  }, {passive:true});
-  el.addEventListener('touchmove', function(e){
-    if (e.touches.length === 1 && down){
-      var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
-      sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved += Math.abs(dx) + Math.abs(dy);
-      cam.theta -= dx * 0.005; cam.phi -= dy * 0.004;
-    } else if (e.touches.length === 2){
-      var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
-      if (pinch) cam.r = Math.max(28, Math.min(760, cam.r * (pinch / d)));
-      pinch = d;
-    }
-    e.preventDefault();
-  }, {passive:false});
-  el.addEventListener('touchend', function(e){
-    if (down && moved < 8 && e.changedTouches.length) pick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
-    down = false; pinch = 0;
-  });
-}
-
-function bindUI(){
-  document.querySelectorAll('#views button').forEach(function(b){
-    b.addEventListener('click', function(){ setView(b.dataset.view, b); });
-  });
-  var full = false, bw = document.getElementById('b-walls');
-  bw.addEventListener('click', function(){
-    full = !full; bw.classList.toggle('on', full);
-    bw.textContent = full ? 'Cutaway' : 'Full height';
-    extWalls.forEach(function(m){ m.scale.y = (full ? FULL : CUT) / FULL; });
-  });
-  var bt = document.getElementById('b-tags');
-  bt.addEventListener('click', function(){
-    tagsEl.classList.toggle('off');
-    bt.classList.toggle('on', !tagsEl.classList.contains('off'));
-  });
-  var bp = document.getElementById('b-people'), shown = true;
-  bp.addEventListener('click', function(){
-    shown = !shown; bp.classList.toggle('on', shown);
-    people.forEach(function(g){ g.visible = shown; });
-  });
-}
-function onResize(){
-  camera.aspect = stage.clientWidth / stage.clientHeight;
-  camera.updateProjectionMatrix();
-  renderer.setSize(stage.clientWidth, stage.clientHeight);
-}
-function animate(){ requestAnimationFrame(animate); step(); renderer.render(scene, camera); updateTags(); }
-
-init();
+  var host = document.getElementById('scene');
+  var view = SOG.create(host, {ambient:true});
+  window.addEventListener('resize', view.resize);
+  setTimeout(function(){ document.getElementById('boot').classList.add('gone'); }, 600);
 })();
 </script>
 </body>

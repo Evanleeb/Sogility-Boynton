@@ -1,0 +1,384 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sogility · BC Commerce Center Building A · Boynton Beach, FL</title>
+<meta name="description" content="Proposed 20,673 SF Sogility training facility at BC Commerce Center Building A, 8255 Boynton Beach Blvd, Boynton Beach, Florida.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500;600&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --void:#0C0F11; --steel:#151A1D; --steel-2:#1D2428; --line:#2C3439; --line-2:#3D474D;
+    --bone:#EAE7DF; --dim:#8E979C; --volt:#C6F04B; --volt-dim:#7E9B2E; --clay:#CA8149;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{margin:0;background:var(--void);color:var(--bone);font-family:"Barlow",system-ui,sans-serif;
+    font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased}
+  h1,h2,h3{font-family:"Barlow Condensed",Impact,sans-serif;text-transform:uppercase;
+    letter-spacing:.02em;font-weight:700;margin:0;line-height:.95}
+  .mono{font-family:"Roboto Mono",monospace;font-variant-numeric:tabular-nums}
+  a{color:var(--volt)}
+
+  #bar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;
+    align-items:center;gap:16px;padding:14px 22px;pointer-events:none;
+    background:linear-gradient(180deg,rgba(12,15,17,.92),rgba(12,15,17,.5) 70%,rgba(12,15,17,0))}
+  #bar .brand{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;
+    letter-spacing:.14em;text-transform:uppercase}
+  #bar .brand span{color:var(--volt)}
+  #bar .addr{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
+    text-align:right;line-height:1.7}
+
+  #stage{position:relative;height:100svh;min-height:560px;overflow:hidden;border-bottom:1px solid var(--line)}
+  #stage canvas{display:block}
+  #tags{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .tag{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-size:10px;
+    letter-spacing:.1em;text-transform:uppercase;color:#F2F0EA;background:rgba(12,15,17,.7);
+    border:1px solid rgba(234,231,223,.16);border-radius:3px;padding:3px 7px;transition:opacity .25s}
+  .tag b{color:var(--volt);font-weight:500;margin-left:7px;font-family:"Roboto Mono",monospace}
+  #tags.off .tag{opacity:0}
+
+  #kicker{position:absolute;left:22px;bottom:118px;z-index:12;pointer-events:none;max-width:min(520px,72vw)}
+  #kicker .eyebrow{font-size:10px;letter-spacing:.3em;text-transform:uppercase;color:var(--volt);margin-bottom:10px}
+  #kicker h1{font-size:clamp(34px,6.2vw,74px)}
+  #kicker p{margin:12px 0 0;color:var(--dim);font-size:14px;max-width:46ch}
+
+  #dock{position:absolute;left:22px;right:22px;bottom:22px;z-index:14;display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .seg{display:flex;background:rgba(21,26,29,.92);border:1px solid var(--line);border-radius:4px;
+    overflow:hidden;backdrop-filter:blur(10px)}
+  .seg button{border:0;border-right:1px solid var(--line)}
+  .seg button:last-child{border-right:0}
+  button{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;letter-spacing:.1em;
+    text-transform:uppercase;color:var(--bone);background:transparent;padding:9px 14px;cursor:pointer;
+    transition:background .15s,color .15s}
+  button:hover{background:var(--steel-2)}
+  button.on{background:var(--volt);color:#141709}
+  button:focus-visible{outline:2px solid var(--volt);outline-offset:2px}
+
+  #rail{position:absolute;right:22px;top:78px;z-index:12;width:252px;max-height:calc(100svh - 190px);
+    overflow:auto;display:flex;flex-direction:column;gap:5px}
+  #rail .rl{font-size:10px;letter-spacing:.24em;text-transform:uppercase;color:var(--dim);margin:0 0 5px 2px}
+  .zone{display:flex;justify-content:space-between;align-items:baseline;gap:10px;width:100%;text-align:left;
+    background:rgba(21,26,29,.88);border:1px solid var(--line);border-left:2px solid var(--sw,var(--line-2));
+    border-radius:3px;padding:9px 11px;cursor:pointer;transition:border-color .15s,background .15s,transform .15s;
+    backdrop-filter:blur(10px)}
+  .zone:hover{background:var(--steel-2);transform:translateX(-3px)}
+  .zone.on{border-color:var(--volt);background:#222A18}
+  .zone .n{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+    text-transform:uppercase;letter-spacing:.04em;line-height:1.15}
+  .zone .d{font-family:"Roboto Mono",monospace;font-size:10px;color:var(--dim);white-space:nowrap}
+
+  #hint{position:absolute;right:22px;bottom:24px;z-index:12;font-size:10px;letter-spacing:.14em;
+    text-transform:uppercase;color:#5F686D;pointer-events:none;text-align:right;line-height:1.9}
+  #boot{position:absolute;inset:0;z-index:25;display:grid;place-items:center;background:var(--void);transition:opacity .6s}
+  #boot.gone{opacity:0;pointer-events:none}
+  #boot div{font-family:"Barlow Condensed",sans-serif;font-size:12px;letter-spacing:.34em;
+    text-transform:uppercase;color:var(--dim)}
+
+  main{max-width:1120px;margin:0 auto;padding:72px 22px 96px}
+  .sechead{display:flex;align-items:baseline;gap:14px;margin-bottom:22px;border-bottom:1px solid var(--line);padding-bottom:10px}
+  .sechead h2{font-size:26px}
+  .sechead .num{font-family:"Roboto Mono",monospace;font-size:11px;color:var(--volt-dim)}
+  section{margin-bottom:64px}
+
+  table{width:100%;border-collapse:collapse;font-size:14px}
+  th{font-family:"Barlow Condensed",sans-serif;text-transform:uppercase;letter-spacing:.14em;font-size:11px;
+    color:var(--dim);text-align:left;font-weight:600;padding:0 12px 9px 0;border-bottom:1px solid var(--line)}
+  td{padding:11px 12px 11px 0;border-bottom:1px solid #1A2024;vertical-align:top}
+  td.num,th.num{text-align:right;font-family:"Roboto Mono",monospace;padding-right:0}
+  tr.tot td{border-bottom:0;border-top:1px solid var(--line-2);font-weight:600;padding-top:14px}
+  .sw{display:inline-block;width:9px;height:9px;border-radius:2px;margin-right:9px}
+
+  .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:1px;background:var(--line);border:1px solid var(--line)}
+  .cell{background:var(--steel);padding:18px}
+  .cell .k{font-size:10px;letter-spacing:.2em;text-transform:uppercase;color:var(--dim);margin-bottom:7px}
+  .cell .v{font-family:"Barlow Condensed",sans-serif;font-size:27px;font-weight:700;line-height:1}
+  .cell .v small{font-size:14px;color:var(--dim);font-weight:500;margin-left:5px}
+  .cell .note{font-size:12px;color:var(--dim);margin-top:7px}
+
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:34px}
+  .cols p{margin:0 0 13px}
+  .flag{border-left:2px solid var(--clay);padding:2px 0 2px 15px;color:var(--dim);font-size:14px}
+  .ok{color:var(--volt)}
+  footer{border-top:1px solid var(--line);padding:26px 22px 60px;text-align:center;color:#5F686D;
+    font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+
+  @media (max-width:860px){
+    #rail,#hint{display:none}
+    #kicker{bottom:92px;left:16px}
+    #dock{left:14px;right:14px;bottom:14px;gap:6px}
+    button{padding:9px 11px;font-size:12px}
+    .cols{grid-template-columns:1fr;gap:22px}
+    main{padding:52px 16px 72px}
+  }
+  @media (prefers-reduced-motion:reduce){*{transition:none!important}}
+</style>
+</head>
+<body>
+
+<div id="bar">
+  <div class="brand">SO<span>GILITY</span></div>
+  <div class="addr">BC Commerce Center &middot; Building A<br>8255 Boynton Beach Blvd &middot; Boynton Beach, FL</div>
+</div>
+
+<div id="stage">
+  <div id="tags"></div>
+  <div id="kicker">
+    <div class="eyebrow">Proposed facility &middot; Suites 650 + 600</div>
+    <h1>Train different.<br>Get better.</h1>
+    <p>20,673 SF under roof in a clear span end bay, plus a 2,484 SF futsal court on the truck court.</p>
+  </div>
+  <div id="rail"><div class="rl">Program</div></div>
+  <div id="dock">
+    <div class="seg" id="views">
+      <button data-view="aerial" class="on">Aerial</button>
+      <button data-view="entry">Entry</button>
+      <button data-view="tsz">Field level</button>
+      <button data-view="dev">Weight floor</button>
+      <button data-view="court">Futsal court</button>
+      <button data-view="plan">Plan</button>
+    </div>
+    <div class="seg">
+      <button id="b-walls">Full height</button>
+      <button id="b-tags" class="on">Labels</button>
+      <button id="b-people" class="on">People</button>
+    </div>
+  </div>
+  <div id="hint">Drag to orbit &middot; scroll to zoom<br>Shift drag to pan &middot; tap a space to fly to it</div>
+  <div id="boot"><div>Loading facility model</div></div>
+</div>
+
+<main>
+
+<section>
+  <div class="sechead"><span class="num">01</span><h2>The space</h2></div>
+  <div class="grid">
+    <div class="cell"><div class="k">Combined premises</div><div class="v">20,673 <small>SF</small></div>
+      <div class="note">Suite 650 at 13,349 SF plus Suite 600 at 7,324 SF, demising wall removed</div></div>
+    <div class="cell"><div class="k">Suite 650 clear span</div><div class="v">69'6" <small>x 192'6"</small></div>
+      <div class="note">No interior columns. The structural grid falls on the demising wall</div></div>
+    <div class="cell"><div class="k">Turf under roof</div><div class="v">10,400 <small>SF</small></div>
+      <div class="note">Two 80 x 50 zones and two 40 x 30 training grids</div></div>
+    <div class="cell"><div class="k">Outdoor futsal</div><div class="v">2,484 <small>SF</small></div>
+      <div class="note">39'9" x 62'5" on the truck court, overhead door access</div></div>
+  </div>
+</section>
+
+<section>
+  <div class="sechead"><span class="num">02</span><h2>Area schedule</h2></div>
+  <table>
+    <thead><tr><th>Space</th><th>Dimension</th><th class="num">Area</th></tr></thead>
+    <tbody id="sched"></tbody>
+  </table>
+</section>
+
+<section>
+  <div class="sechead"><span class="num">03</span><h2>Why this box works</h2></div>
+  <div class="cols">
+    <div>
+      <p><span class="ok">Suite 650 is a clear span end bay.</span> It runs 69'6" wide by 192'6" deep with no interior columns. The structural grid at 37'6" and 75'0" lands on the demising wall between 650 and 600, which puts the only two columns in the combined premises inside the circulation aisle between the technical zones and the training grids. Neither 80 x 50 field is obstructed.</p>
+      <p>That depth is what makes the plan work. The end bays of Building A run about 57 feet deeper than the middle bays, so two full 80 x 50 zones stack end to end with room left over for the restroom block on the north wall.</p>
+    </div>
+    <div>
+      <p>Suite 600 carries everything that needs walls. The party room sits on the north end where parents see the entry, the two private offices sit behind it, the athlete development floor holds the middle, and the two 40 x 30 grids run south.</p>
+      <p>Overhead doors on the south wall open onto the futsal court, so the indoor and outdoor training areas run as one facility rather than two.</p>
+      <p class="flag">Shell dimensions, the suite split, the structural grid and the restroom block were taken off Arcadis leasing plan AS1.01 dated 3/7/2024. Clear height and the plumbing fixture count still need confirmation against the permit set.</p>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>Prepared by Butters Construction &amp; Development &middot; Schematic space plan, not for construction</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script src="model.js"></script>
+<script>
+(function(){
+"use strict";
+var stage = document.getElementById('stage');
+var tagsEl = document.getElementById('tags');
+var view = SOG.create(stage, {ambient:false});
+var ZONES = view.zones, cam = view.cam, tags = [];
+
+/* ---------- floating labels ---------- */
+ZONES.forEach(function(z){
+  if (z.sf < 190) return;
+  var el = document.createElement('div');
+  el.className = 'tag';
+  el.innerHTML = z.name + '<b>' + z.dim + '</b>';
+  tagsEl.appendChild(el);
+  tags.push({el:el, v:new THREE.Vector3(z.x + z.w/2, 3, z.z + z.d/2)});
+});
+[['Suite 650 \u00b7 13,349 SF', 34, 188], ['Suite 600 \u00b7 7,324 SF', 96, 130]].forEach(function(t){
+  var el = document.createElement('div');
+  el.className = 'tag';
+  el.innerHTML = t[0];
+  tagsEl.appendChild(el);
+  tags.push({el:el, v:new THREE.Vector3(t[1], 26, t[2])});
+});
+view.onFrame(function(camera){
+  if (tagsEl.classList.contains('off')) return;
+  var w = stage.clientWidth, h = stage.clientHeight;
+  for (var i = 0; i < tags.length; i++){
+    var t = tags[i], p = t.v.clone().project(camera);
+    var vis = p.z < 1 && Math.abs(p.x) < 1.05 && Math.abs(p.y) < 1.05;
+    t.el.style.display = vis ? 'block' : 'none';
+    if (vis){
+      t.el.style.left = ((p.x + 1) / 2 * w) + 'px';
+      t.el.style.top = ((-p.y + 1) / 2 * h) + 'px';
+    }
+  }
+});
+
+/* ---------- program rail ---------- */
+var rail = document.getElementById('rail');
+ZONES.forEach(function(z){
+  if (z.sf < 190) return;
+  var b = document.createElement('button');
+  b.className = 'zone';
+  b.style.setProperty('--sw', z.col);
+  b.dataset.zid = z.id;
+  b.innerHTML = '<span class="n">' + z.name + '</span><span class="d">' + z.sf.toLocaleString() + ' SF</span>';
+  b.addEventListener('click', function(){ pickZone(z, b); });
+  rail.appendChild(b);
+});
+
+/* ---------- area schedule ---------- */
+(function(){
+  var body = document.getElementById('sched'), tot = 0;
+  ZONES.forEach(function(z){
+    tot += z.sf;
+    var tr = document.createElement('tr');
+    tr.innerHTML = '<td><span class="sw" style="background:' + z.col + '"></span>' + z.name + '</td>' +
+      '<td class="mono" style="color:#8E979C">' + z.dim + '</td>' +
+      '<td class="num">' + z.sf.toLocaleString() + '</td>';
+    body.appendChild(tr);
+  });
+  var c = document.createElement('tr');
+  c.innerHTML = '<td><span class="sw" style="background:#3D474D"></span>Circulation, benches and back of house</td>' +
+    '<td class="mono" style="color:#8E979C">balance</td>' +
+    '<td class="num">' + (20673 - (tot - 2484)).toLocaleString() + '</td>';
+  body.appendChild(c);
+  var t = document.createElement('tr');
+  t.className = 'tot';
+  t.innerHTML = '<td>Total, under roof</td><td class="mono" style="color:#8E979C">Suites 650 + 600</td><td class="num">20,673</td>';
+  body.appendChild(t);
+})();
+
+/* ---------- selection ---------- */
+function clearBtns(){
+  document.querySelectorAll('.zone').forEach(function(o){ o.classList.remove('on'); });
+  document.querySelectorAll('#views button').forEach(function(o){ o.classList.remove('on'); });
+}
+function pickZone(z, btn){
+  clearBtns();
+  if (btn) btn.classList.add('on');
+  view.focus(z);
+}
+function pickView(name, btn){
+  clearBtns();
+  if (btn) btn.classList.add('on');
+  view.setView(name);
+  view.clearFocus();
+}
+
+/* ---------- orbit ---------- */
+(function(){
+  var el = view.renderer.domElement, down = false, sx = 0, sy = 0, pan = false, moved = 0, pinch = 0;
+  function pick(cx, cy){
+    var r = el.getBoundingClientRect();
+    var v = new THREE.Vector2(((cx - r.left)/r.width)*2 - 1, -((cy - r.top)/r.height)*2 + 1);
+    var rc = new THREE.Raycaster();
+    rc.setFromCamera(v, view.camera);
+    var hits = rc.intersectObjects(ZONES.map(function(z){ return z.mesh; }));
+    if (hits.length){
+      var z = ZONES.filter(function(q){ return q.mesh === hits[0].object; })[0];
+      pickZone(z, document.querySelector('.zone[data-zid="' + z.id + '"]'));
+    }
+  }
+  el.addEventListener('mousedown', function(e){
+    down = true; sx = e.clientX; sy = e.clientY; moved = 0;
+    pan = e.shiftKey || e.button === 2;
+    view.clearGoal();
+  });
+  window.addEventListener('mousemove', function(e){
+    if (!down) return;
+    var dx = e.clientX - sx, dy = e.clientY - sy;
+    sx = e.clientX; sy = e.clientY; moved += Math.abs(dx) + Math.abs(dy);
+    if (pan){
+      var k = cam.r * 0.0016, ct = Math.cos(cam.theta), st = Math.sin(cam.theta);
+      cam.tx += -dx*ct*k + dy*st*k*0.6;
+      cam.tz += -dx*st*k - dy*ct*k*0.6;
+    } else {
+      cam.theta -= dx * 0.005;
+      cam.phi -= dy * 0.004;
+    }
+  });
+  window.addEventListener('mouseup', function(e){
+    if (down && moved < 5) pick(e.clientX, e.clientY);
+    down = false; pan = false;
+  });
+  el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+  el.addEventListener('wheel', function(e){
+    e.preventDefault();
+    view.clearGoal();
+    cam.r = Math.max(28, Math.min(760, cam.r * (1 + Math.sign(e.deltaY) * 0.085)));
+  }, {passive:false});
+  el.addEventListener('touchstart', function(e){
+    if (e.touches.length === 1){
+      down = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved = 0; view.clearGoal();
+    } else if (e.touches.length === 2){
+      down = false;
+      pinch = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+    }
+  }, {passive:true});
+  el.addEventListener('touchmove', function(e){
+    if (e.touches.length === 1 && down){
+      var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved += Math.abs(dx) + Math.abs(dy);
+      cam.theta -= dx * 0.005; cam.phi -= dy * 0.004;
+    } else if (e.touches.length === 2){
+      var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      if (pinch) cam.r = Math.max(28, Math.min(760, cam.r * (pinch / d)));
+      pinch = d;
+    }
+    e.preventDefault();
+  }, {passive:false});
+  el.addEventListener('touchend', function(e){
+    if (down && moved < 8 && e.changedTouches.length) pick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+    down = false; pinch = 0;
+  });
+})();
+
+/* ---------- controls ---------- */
+document.querySelectorAll('#views button').forEach(function(b){
+  b.addEventListener('click', function(){ pickView(b.dataset.view, b); });
+});
+var full = false, bw = document.getElementById('b-walls');
+bw.addEventListener('click', function(){
+  full = !full;
+  bw.classList.toggle('on', full);
+  bw.textContent = full ? 'Cutaway' : 'Full height';
+  view.setWalls(full);
+});
+var bt = document.getElementById('b-tags');
+bt.addEventListener('click', function(){
+  tagsEl.classList.toggle('off');
+  bt.classList.toggle('on', !tagsEl.classList.contains('off'));
+});
+var bp = document.getElementById('b-people'), shown = true;
+bp.addEventListener('click', function(){
+  shown = !shown;
+  bp.classList.toggle('on', shown);
+  view.setPeople(shown);
+});
+
+window.addEventListener('resize', view.resize);
+setTimeout(function(){ document.getElementById('boot').classList.add('gone'); }, 500);
+})();
+</script>
+</body>
+</html>
