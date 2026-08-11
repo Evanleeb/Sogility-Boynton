@@ -2,6 +2,7 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sogility · BC Commerce Center Building A · Boynton Beach, FL</title>
 <meta name="description" content="Proposed 20,673 SF Sogility training facility at BC Commerce Center Building A, 8255 Boynton Beach Blvd, Boynton Beach, Florida.">
@@ -47,6 +48,12 @@
   #gate{position:absolute;inset:0;z-index:20;display:grid;place-items:center;cursor:pointer;
     background:rgba(9,12,14,.30);transition:opacity .3s,visibility .3s}
   #gate.off{opacity:0;visibility:hidden}
+  .g-mob{display:none}
+  #gate button.g-mob{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;
+    letter-spacing:.14em;text-transform:uppercase;color:#141709;background:var(--volt);
+    border:0;border-radius:5px;padding:14px 22px;cursor:pointer;line-height:1.2}
+  #gate button.g-mob small{color:#3B4A18;letter-spacing:.04em}
+  @media (max-width:860px){ .g-desk{display:none} .g-mob{display:block} }
   #gate div{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;
     letter-spacing:.16em;text-transform:uppercase;color:var(--bone);
     background:rgba(12,15,17,.9);border:1px solid var(--line);border-radius:4px;padding:12px 20px}
@@ -130,17 +137,63 @@
   footer{border-top:1px solid var(--line);padding:26px 22px 60px;text-align:center;color:#5F686D;
     font-size:11px;letter-spacing:.1em;text-transform:uppercase}
 
+  /* ---------- walkthrough: fills the screen, landscape ---------- */
+  #stage.walk{position:fixed;inset:0;z-index:80;height:100dvh;min-height:0;max-width:none;
+    border:0;border-radius:0;margin:0}
+  body.locked{overflow:hidden}
+  .walk #kicker,.walk #gate,.walk #live{display:none}
+  #walkbar{display:none}
+  .walk #walkbar{position:absolute;top:0;left:0;right:0;z-index:26;display:flex;
+    justify-content:space-between;align-items:center;gap:10px;padding:10px 12px;
+    background:linear-gradient(180deg,rgba(12,15,17,.9),transparent)}
+  .walk #walkbar .wt{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:12px;
+    letter-spacing:.14em;text-transform:uppercase;color:var(--dim);white-space:nowrap}
+  #exitwalk{background:rgba(21,26,29,.94);border:1px solid var(--line);border-radius:4px;
+    padding:9px 14px;flex:0 0 auto}
+  .walk #dock{bottom:10px;left:10px;right:10px}
+  #rotate{display:none}
+  @media (orientation:portrait){
+    .walk #rotate{position:absolute;inset:0;z-index:30;display:grid;place-items:center;
+      background:rgba(9,12,14,.93);text-align:center;padding:28px}
+    .walk #rotate .r{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;
+      letter-spacing:.14em;text-transform:uppercase;color:var(--bone);line-height:1.7}
+    .walk #rotate small{display:block;font-family:"Roboto Mono",monospace;font-size:10px;
+      letter-spacing:.1em;color:var(--dim);text-transform:none;margin-top:10px}
+    .walk #rotate .ico{font-size:34px;color:var(--volt);margin-bottom:12px;display:block}
+  }
+
   @media (max-width:860px){
     #rail,#hint{display:none}
-    #hero{padding:60px 12px 0}
-    #stage{height:min(62svh,540px);min-height:380px;border-radius:10px}
-    #gate div{font-size:13px;padding:11px 16px}
-    #live{left:12px;top:10px}
-    #kicker{bottom:92px;left:16px}
-    #dock{left:14px;right:14px;bottom:14px;gap:6px}
-    button{padding:9px 11px;font-size:12px}
+    #hero{padding:58px 10px 0}
+    #stage{height:min(56svh,460px);min-height:320px;border-radius:10px}
+    #live{left:10px;top:9px;font-size:9px}
+    #kicker{display:none}
+    /* one scrolling row instead of twelve wrapped buttons */
+    #dock{left:10px;right:10px;bottom:10px;gap:6px;flex-wrap:nowrap;overflow-x:auto;
+      padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+    #dock::-webkit-scrollbar{display:none}
+    .seg{flex:0 0 auto}
+    #b-expand{display:none}
+    button{padding:10px 12px;font-size:12px}
     .cols{grid-template-columns:1fr;gap:22px}
-    main{padding:52px 16px 72px}
+    main{padding:44px 16px 72px}
+    .sechead h2{font-size:22px}
+    .grid{grid-template-columns:1fr 1fr}
+    .cell{padding:14px}
+    .cell .v{font-size:22px}
+    table{font-size:13px}
+    td{padding:9px 8px 9px 0}
+    .tag{font-size:9px;padding:2px 5px}
+    .tag b{margin-left:5px}
+  }
+  @media (max-width:480px){
+    .grid{grid-template-columns:1fr}
+    #stage{height:min(52svh,420px)}
+  }
+  /* phones held sideways: give the model the whole screen */
+  @media (max-width:940px) and (orientation:landscape){
+    #hero{padding:52px 10px 0}
+    #stage{height:82svh}
   }
   @media (prefers-reduced-motion:reduce){*{transition:none!important}}
 </style>
@@ -182,7 +235,12 @@
   <div id="hint">Drag to orbit &middot; scroll to zoom<br>Shift drag to pan &middot; tap a space to fly to it</div>
   <div id="boot"><div>Loading facility model</div></div>
   <div id="live">Exploring &middot; Esc to release</div>
-  <div id="gate"><div>Click to explore<small>Until then, scroll moves the page. Two fingers on touch.</small></div></div>
+  <div id="gate">
+    <div class="g-desk">Click to explore<small>Until then, scroll moves the page.</small></div>
+    <button class="g-mob" id="startwalk">Start walkthrough<small>Opens full screen, best held sideways</small></button>
+  </div>
+  <div id="walkbar"><span class="wt">Sogility &middot; Suites 650 + 600</span><button id="exitwalk">Done</button></div>
+  <div id="rotate"><div class="r"><span class="ico">&#8635;</span>Turn your phone sideways<small>The space is 192 feet deep. It needs the width.</small></div></div>
 </div>
 <div class="scrollcue"><a href="#schedule">Area schedule
   <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a></div>
@@ -258,7 +316,7 @@ ZONES.forEach(function(z){
   el.className = 'tag';
   el.innerHTML = z.name + '<b>' + z.dim + '</b>';
   tagsEl.appendChild(el);
-  tags.push({el:el, v:new THREE.Vector3(z.x + z.w/2, 3, z.z + z.d/2)});
+  tags.push({el:el, v:new THREE.Vector3(z.x + z.w/2, 3, z.z + z.d/2), sf:z.sf});
 });
 [['Suite 650 \u00b7 13,349 SF', 34, 188], ['Suite 600 \u00b7 7,324 SF', 96, 130]].forEach(function(t){
   var el = document.createElement('div');
@@ -270,9 +328,11 @@ ZONES.forEach(function(z){
 view.onFrame(function(camera){
   if (tagsEl.classList.contains('off')) return;
   var w = stage.clientWidth, h = stage.clientHeight;
+  var minSf = (w < 640) ? 1000 : 0;
   for (var i = 0; i < tags.length; i++){
     var t = tags[i], p = t.v.clone().project(camera);
-    var vis = p.z < 1 && Math.abs(p.x) < 1.05 && Math.abs(p.y) < 1.05;
+    var vis = p.z < 1 && Math.abs(p.x) < 1.05 && Math.abs(p.y) < 1.05
+      && (t.sf === undefined || t.sf >= minSf);
     t.el.style.display = vis ? 'block' : 'none';
     if (vis){
       t.el.style.left = ((p.x + 1) / 2 * w) + 'px';
@@ -344,7 +404,48 @@ function setActive(on){
   gate.classList.toggle('off', on);
   live.classList.toggle('on', on);
 }
-gate.addEventListener('click', function(){ setActive(true); });
+gate.addEventListener('click', function(e){
+  if (e.target.closest('#startwalk')) return;
+  setActive(true);
+});
+
+/* ---------- walkthrough: full screen, landscape, one finger orbit ---------- */
+var immersive = false;
+function isPhone(){ return window.matchMedia('(max-width:860px)').matches; }
+
+async function enterWalk(){
+  if (immersive) return;
+  immersive = true;
+  setActive(true);
+  stage.classList.add('walk');
+  document.body.classList.add('locked');
+  try {
+    if (stage.requestFullscreen) await stage.requestFullscreen({navigationUI:'hide'});
+    else if (stage.webkitRequestFullscreen) stage.webkitRequestFullscreen();
+  } catch (e) { /* iOS Safari refuses on a div; the CSS overlay covers it */ }
+  try {
+    if (screen.orientation && screen.orientation.lock) await screen.orientation.lock('landscape');
+  } catch (e) { /* unsupported, the rotate prompt handles it */ }
+  requestAnimationFrame(function(){ view.resize(); });
+}
+function exitWalk(){
+  if (!immersive) return;
+  immersive = false;
+  stage.classList.remove('walk');
+  document.body.classList.remove('locked');
+  try { if (screen.orientation && screen.orientation.unlock) screen.orientation.unlock(); } catch (e) {}
+  try { if (document.fullscreenElement && document.exitFullscreen) document.exitFullscreen(); } catch (e) {}
+  requestAnimationFrame(function(){ view.resize(); });
+}
+document.getElementById('startwalk').addEventListener('click', enterWalk);
+document.getElementById('exitwalk').addEventListener('click', exitWalk);
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape' && immersive) exitWalk(); });
+document.addEventListener('fullscreenchange', function(){
+  if (!document.fullscreenElement && immersive) exitWalk();
+});
+['orientationchange','resize'].forEach(function(ev){
+  window.addEventListener(ev, function(){ requestAnimationFrame(function(){ view.resize(); }); });
+});
 document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setActive(false); });
 document.addEventListener('mousedown', function(e){
   if (active && !stage.contains(e.target)) setActive(false);
@@ -402,6 +503,11 @@ document.addEventListener('mousedown', function(e){
 
   /* touch: one finger scrolls the page, two fingers drive the model */
   el.addEventListener('touchstart', function(e){
+    if (immersive && e.touches.length === 1){
+      down = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved = 0;
+      view.clearGoal();
+      return;
+    }
     if (e.touches.length === 2){
       down = true;
       sx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
@@ -416,6 +522,15 @@ document.addEventListener('mousedown', function(e){
     }
   }, {passive:true});
   el.addEventListener('touchmove', function(e){
+    if (immersive && e.touches.length === 1 && down){
+      e.preventDefault();
+      var ix = e.touches[0].clientX, iy = e.touches[0].clientY;
+      var idx = ix - sx, idy = iy - sy;
+      sx = ix; sy = iy; moved += Math.abs(idx) + Math.abs(idy);
+      cam.theta -= idx * 0.006;
+      cam.phi -= idy * 0.0045;
+      return;
+    }
     if (e.touches.length === 2){
       e.preventDefault();
       var mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
@@ -444,7 +559,7 @@ if ('IntersectionObserver' in window){
   new IntersectionObserver(function(entries){
     var vis = entries[0].isIntersecting;
     view.setPaused(!vis);
-    view.setQuality(vis);
+    view.setQuality(vis && !isPhone());
     if (!vis) setActive(false);
   }, {threshold:0.04}).observe(stage);
 }

@@ -4,32 +4,59 @@ Coming soon page and interactive 3D space plan for the proposed Sogility
 training facility at 8255 Boynton Beach Blvd, Building A, Suites 650 + 600,
 Boynton Beach, FL.
 
-Prepared by Butters Construction and Development. Schematic only, not for construction.
+Prepared by Butters Construction and Development. Schematic only, not for
+construction.
 
 ## Files
 
-    index.html    public coming soon page, cinematic camera behind the type
-    plan.html     interactive space plan with the program rail and area schedule
+    index.html    coming soon page, cinematic camera behind the type
+    plan.html     interactive space plan, program rail and area schedule
     model.js      the 3D facility model, shared by both pages
+    robots.txt    keeps the site out of search results
     .nojekyll     tells GitHub Pages to serve the files as is
     README.md     this file
 
-No build step. The only external dependencies are three.js (cdnjs) and
-Google Fonts.
+Upload all of those to the repo root. No build step. The only external
+dependencies are three.js (cdnjs) and Google Fonts.
 
-## Deploy to GitHub Pages
+The optional-encryption folder is not part of the site. It holds a local
+tool that can password protect the pages if that is ever wanted. Do not
+upload it.
 
-1. Upload index.html, plan.html, model.js, README.md and .nojekyll to the
-   root of the main branch of Evanleeb/Sogility-Boynton
+## Deploy
+
+1. Upload the files above to the root of the main branch
 2. Settings, Pages, Source: Deploy from a branch, Branch: main, Folder: / (root)
-3. The site publishes at https://evanleeb.github.io/Sogility-Boynton/
+3. Publishes at https://evanleeb.github.io/Sogility-Boynton/
 
 The GitHub web uploader skips dotfiles. To add .nojekyll use Add file,
 Create new file, name it .nojekyll and put a single space in the body.
 
-## Editing the plan
+## Taking it back down
 
-All geometry lives in model.js. Both pages read from it, so one edit
+Both pages carry a noindex meta tag and robots.txt disallows everything, so
+search engines should stay off it while it is live. That is best effort, not
+a guarantee.
+
+When you are done showing it:
+
+- On GitHub Free, switching the repository to private automatically
+  unpublishes the Pages site. One step, done.
+- On GitHub Pro, switching the repository to private does NOT take the site
+  down. A Pages site stays public even when its source repo is private. Go
+  to Settings, Pages and set Source to None first, then change the repo
+  visibility. Check the URL in a private browser window to confirm.
+- Deleting the repository outright takes down the site and the commit
+  history with it.
+
+Two things taking it down does not do. It does not retract anything already
+seen or saved by whoever had the link, and while the repository stays public
+the plan is readable in the commit history even after Pages is switched off.
+Making the repo private closes that second one.
+
+## Changing the plan
+
+All the geometry lives in model.js. Both pages read from it, so one edit
 updates the landing page and the space plan together.
 
 The two suite shells, verified against Arcadis AS1.01 vector geometry:
@@ -37,8 +64,8 @@ The two suite shells, verified against Arcadis AS1.01 vector geometry:
     var S650 = {x:0,    z:0, w:69.5, d:192.5};
     var S600 = {x:69.5, z:0, w:54,   d:135.7};
 
-Every room is one row in the ZONES array. Coordinates are in feet, origin
-at the northwest corner of Suite 650, x runs east, z runs south:
+Every room is one row in the ZONES array. Coordinates in feet, origin at the
+northwest corner of Suite 650, x runs east, z runs south:
 
     {id:'tsz-a', name:'Technical Soccer Zone A', dim:'80 x 50', sf:4000,
      x:9.75, z:18.7, w:50, d:80, kind:'turf', col:'#5C9B47'}
@@ -52,7 +79,7 @@ that one row.
     CUT/FULL  cutaway and full wall heights in feet
     GRID_Z    column grid lines off the north wall
 
-Useful helpers further down model.js, all taking feet:
+Helpers further down model.js, all taking feet:
 
     rollDoor(x, z, w, h, openFrac)   openFrac 0 closed, 1 fully up
     goal(x, z, w, depth, flip)       posts, crossbar and a real mesh net
@@ -61,46 +88,52 @@ Useful helpers further down model.js, all taking feet:
     squatRack(x, z)                  uprights, safety arms, loaded bar
     person(x, z, color, bob)         figure at scale
 
-## Known placeholders
-
-- Clear height is set to 32 feet in model.js (the FULL constant). Confirm
-  against the shell drawings and change it there.
-- The coming soon page says "Now in design" rather than an opening date.
-  Edit the .status line in index.html once a date is set.
-
-## Open items before this becomes a lease exhibit
-
-- Confirm clear height in Building A
-- Plumbing fixture count for the four ADA restrooms against occupant load
-- Confirm the outdoor futsal court does not conflict with truck
-  circulation or required parking
-- Confirm overhead door locations on the south walls
-
 ## Scrolling past the model
 
 The space plan frames the model in a panel rather than filling the window,
 so there is page either side of it to scroll on. The wheel only zooms the
 model after you click into it, or if you hold ctrl or cmd. Press Esc, or
-click anywhere outside the panel, to hand scrolling back to the page. On
-touch, one finger scrolls the page and two fingers drive the model.
+click outside the panel, to hand scrolling back to the page. On touch, one
+finger scrolls and two fingers drive the model. Expand fills the window for
+presenting. The render loop pauses when the panel is off screen.
 
-Expand blows the panel up to fill the window for presenting. The render
-loop pauses whenever the panel is off screen or the tab is in the
-background, so scrolling the rest of the page stays smooth.
+## On a phone
+
+The space plan detects a narrow screen and changes shape. The control row
+becomes a single strip you swipe sideways instead of twelve buttons wrapping
+over each other, the hero text is dropped, labels are limited to the larger
+spaces so they stop stacking on top of each other, and the model renders at
+1x instead of 2x so it stays smooth.
+
+Instead of "Click to explore" the panel offers Start walkthrough. That fills
+the screen, asks the browser for full screen, and tries to lock to landscape.
+Chrome on Android does both. iOS Safari allows neither on a plain element, so
+the page falls back to a full screen overlay and shows a turn your phone
+prompt until the device is sideways. Either way the result is the same, a
+full width view of a 192 foot deep space.
+
+Inside the walkthrough one finger orbits, since the page is locked and has
+nothing to scroll. Two fingers pinch to zoom. Done, Esc, or leaving full
+screen exits and hands scrolling back.
+
+Outside the walkthrough the old rule still holds: one finger scrolls the
+page, two fingers drive the model.
 
 ## Page controls
 
-Landing page: a Daylight / Match lights button switches the model between
-dusk with the high bays lit and normal daylight.
+Landing page: Daylight switches the model between dusk with the high bays
+lit and normal daylight.
 
-Space plan: Expand fills the window, Full height toggles the walls between the 15 foot cutaway and
-full clear height, Labels hides the floating callouts, People hides the
-figures, Shell only strips every piece of fit out so the raw box shows,
-and Match lights switches to the dusk render.
+Space plan: Expand fills the window, Full height toggles the walls between
+the 15 foot cutaway and full clear height, Labels hides the callouts, People
+hides the figures, Shell only strips the fit out to show the raw box, Match
+lights switches to the dusk render.
 
-## If a page shows only "Loading"
+## Open items before this becomes a lease exhibit
 
-model.js did not load. Both pages need it in the same folder. Confirm all
-of index.html, plan.html and model.js are in the repo root, then hard
-refresh. Both pages now fall through and render without the model rather
-than hanging, so a stuck loading screen means an older copy is cached.
+- Confirm clear height in Building A, currently a 32 foot placeholder set by
+  the FULL constant in model.js
+- Plumbing fixture count for the four ADA restrooms against occupant load
+- Confirm the outdoor futsal court does not conflict with truck circulation
+  or required parking
+- Confirm overhead door locations on the south walls
