@@ -2,6 +2,9 @@
 <html lang="en">
 <head>
 <meta charset="utf-8">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#0C0F11">
 <meta name="robots" content="noindex, nofollow, noarchive, nosnippet, noimageindex">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Sogility · BC Commerce Center Building A · Boynton Beach, FL</title>
@@ -170,8 +173,11 @@
     #kicker{display:none}
     /* one scrolling row instead of twelve wrapped buttons */
     #dock{left:10px;right:10px;bottom:10px;gap:6px;flex-wrap:nowrap;overflow-x:auto;
-      padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+      padding-bottom:2px;scrollbar-width:none;-webkit-overflow-scrolling:touch;
+      -webkit-mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%);
+      mask-image:linear-gradient(90deg,#000 0,#000 calc(100% - 26px),transparent 100%)}
     #dock::-webkit-scrollbar{display:none}
+    #dock::after{content:"";flex:0 0 22px}
     .seg{flex:0 0 auto}
     #b-expand{display:none}
     button{padding:10px 12px;font-size:12px}
@@ -323,20 +329,40 @@ ZONES.forEach(function(z){
   el.className = 'tag';
   el.innerHTML = t[0];
   tagsEl.appendChild(el);
-  tags.push({el:el, v:new THREE.Vector3(t[1], 26, t[2])});
+  tags.push({el:el, v:new THREE.Vector3(t[1], 26, t[2]), sf:500});
 });
 view.onFrame(function(camera){
   if (tagsEl.classList.contains('off')) return;
   var w = stage.clientWidth, h = stage.clientHeight;
-  var minSf = (w < 640) ? 1000 : 0;
+  var cand = [];
   for (var i = 0; i < tags.length; i++){
     var t = tags[i], p = t.v.clone().project(camera);
-    var vis = p.z < 1 && Math.abs(p.x) < 1.05 && Math.abs(p.y) < 1.05
-      && (t.sf === undefined || t.sf >= minSf);
-    t.el.style.display = vis ? 'block' : 'none';
-    if (vis){
-      t.el.style.left = ((p.x + 1) / 2 * w) + 'px';
-      t.el.style.top = ((-p.y + 1) / 2 * h) + 'px';
+    if (p.z >= 1 || Math.abs(p.x) > 1.02 || Math.abs(p.y) > 1.02){ t.el.style.display = 'none'; continue; }
+    cand.push({t:t, x:(p.x + 1) / 2 * w, y:(-p.y + 1) / 2 * h, pri:t.sf || 0});
+  }
+  /* biggest space wins the spot, anything that would collide is dropped */
+  cand.sort(function(a, b){ return b.pri - a.pri; });
+  var placed = [];
+  for (var j = 0; j < cand.length; j++){
+    var c = cand[j], el = c.t.el;
+    if (!c.t.w || !c.t.h){
+      el.style.display = 'block';
+      c.t.w = el.offsetWidth; c.t.h = el.offsetHeight;
+    }
+    var bw = (c.t.w || 110) / 2 + 5, bh = (c.t.h || 20) / 2 + 4;
+    var r = {l:c.x - bw, t:c.y - bh, r:c.x + bw, b:c.y + bh};
+    var hit = false;
+    for (var k = 0; k < placed.length; k++){
+      var q = placed[k];
+      if (!(r.r < q.l || r.l > q.r || r.b < q.t || r.t > q.b)){ hit = true; break; }
+    }
+    if (hit || r.l < 2 || r.r > w - 2 || r.t < 2 || r.b > h - 2){
+      el.style.display = 'none';
+    } else {
+      placed.push(r);
+      el.style.display = 'block';
+      el.style.left = c.x + 'px';
+      el.style.top = c.y + 'px';
     }
   }
 });
@@ -571,14 +597,25 @@ document.addEventListener('visibilitychange', function(){
 document.querySelectorAll('#views button').forEach(function(b){
   b.addEventListener('click', function(){ pickView(b.dataset.view, b); });
 });
+function lbl(t){
+  var short = {'Field level':'Field','Weight floor':'Weights','Futsal court':'Futsal',
+    'Full height':'Height','Shell only':'Shell','Match lights':'Lights',
+    'Cutaway':'Cutaway','Fit out':'Fit out','Daylight':'Day'};
+  return (window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 900) && short[t] ? short[t] : t;
+}
 var full = false, bw = document.getElementById('b-walls');
 bw.addEventListener('click', function(){
   full = !full;
   bw.classList.toggle('on', full);
-  bw.textContent = full ? 'Cutaway' : 'Full height';
+  bw.textContent = lbl(full ? 'Cutaway' : 'Full height');
   view.setWalls(full);
 });
+var narrow = window.matchMedia('(pointer:coarse)').matches || window.innerWidth < 900;
 var bt = document.getElementById('b-tags');
+if (narrow){
+  tagsEl.classList.add('off');
+  bt.classList.remove('on');
+}
 bt.addEventListener('click', function(){
   tagsEl.classList.toggle('off');
   bt.classList.toggle('on', !tagsEl.classList.contains('off'));
@@ -593,14 +630,14 @@ var bs = document.getElementById('b-shell'), fitted = true;
 bs.addEventListener('click', function(){
   fitted = !fitted;
   bs.classList.toggle('on', !fitted);
-  bs.textContent = fitted ? 'Shell only' : 'Fit out';
+  bs.textContent = lbl(fitted ? 'Shell only' : 'Fit out');
   view.setFitOut(fitted);
 });
 var bd = document.getElementById('b-dusk'), dusk = false;
 bd.addEventListener('click', function(){
   dusk = !dusk;
   bd.classList.toggle('on', dusk);
-  bd.textContent = dusk ? 'Daylight' : 'Match lights';
+  bd.textContent = lbl(dusk ? 'Daylight' : 'Match lights');
   view.setDusk(dusk);
 });
 
@@ -614,6 +651,18 @@ be.addEventListener('click', function(){
   if (big) setActive(true);
   requestAnimationFrame(view.resize);
 });
+
+if (narrow){
+  var short = {
+    'Field level':'Field', 'Weight floor':'Weights', 'Futsal court':'Futsal',
+    'Full height':'Height', 'Shell only':'Shell', 'Match lights':'Lights'
+  };
+  document.querySelectorAll('#dock button').forEach(function(b){
+    var t = b.textContent.trim();
+    if (short[t]) b.textContent = short[t];
+  });
+  document.querySelector('#walkbar .wt').textContent = 'Suites 650 + 600';
+}
 
 window.addEventListener('resize', view.resize);
 setTimeout(function(){ document.getElementById('boot').classList.add('gone'); }, 500);

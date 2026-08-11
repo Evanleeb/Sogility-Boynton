@@ -640,10 +640,12 @@ function create(host, opts){
     par.y += (par.ty - par.y) * 0.045;
     var phiE = Math.max(0.07, Math.min(Math.PI/2 - 0.03, cam.phi + par.y * 0.06));
     var thE = cam.theta + par.x * 0.10;
+    /* pull in on wide short screens so a phone held sideways still fills */
+    var rE = cam.r * Math.max(0.58, Math.min(1, 1.75 / Math.max(0.9, camera.aspect)));
     camera.position.set(
-      cam.tx + cam.r * Math.sin(phiE) * Math.cos(thE),
-      Math.max(2.5, cam.ty + cam.r * Math.cos(phiE)),
-      cam.tz + cam.r * Math.sin(phiE) * Math.sin(thE));
+      cam.tx + rE * Math.sin(phiE) * Math.cos(thE),
+      Math.max(2.5, cam.ty + rE * Math.cos(phiE)),
+      cam.tz + rE * Math.sin(phiE) * Math.sin(thE));
     camera.lookAt(cam.tx, cam.ty, cam.tz);
 
     balls.forEach(function(b){
