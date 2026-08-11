@@ -22,7 +22,7 @@
   .mono{font-family:"Roboto Mono",monospace;font-variant-numeric:tabular-nums}
   a{color:var(--volt)}
 
-  #bar{position:fixed;top:0;left:0;right:0;z-index:30;display:flex;justify-content:space-between;
+  #bar{position:fixed;top:0;left:0;right:0;z-index:60;display:flex;justify-content:space-between;
     align-items:center;gap:16px;padding:14px 22px;pointer-events:none;
     background:linear-gradient(180deg,rgba(12,15,17,.92),rgba(12,15,17,.5) 70%,rgba(12,15,17,0))}
   #bar .brand{font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:22px;
@@ -31,7 +31,32 @@
   #bar .addr{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dim);
     text-align:right;line-height:1.7}
 
-  #stage{position:relative;height:100svh;min-height:560px;overflow:hidden;border-bottom:1px solid var(--line)}
+  #hero{padding:72px 26px 0;max-width:1480px;margin:0 auto}
+  #stage{position:relative;height:min(78svh,860px);min-height:460px;overflow:hidden;
+    border:1px solid var(--line);border-radius:12px;background:#0F1316}
+  #stage.expanded{position:fixed;inset:0;height:100vh;min-height:0;max-width:none;
+    border-radius:0;border:0;z-index:50;margin:0}
+  body.locked{overflow:hidden}
+  .scrollcue{display:flex;justify-content:center;gap:9px;align-items:center;padding:16px 0 0;
+    font-family:"Roboto Mono",monospace;font-size:10px;letter-spacing:.2em;text-transform:uppercase;
+    color:#5F686D}
+  .scrollcue a{color:#5F686D;text-decoration:none;display:inline-flex;align-items:center;gap:8px}
+  .scrollcue a:hover{color:var(--volt)}
+
+  /* click to explore, so the wheel scrolls the page until you opt in */
+  #gate{position:absolute;inset:0;z-index:20;display:grid;place-items:center;cursor:pointer;
+    background:rgba(9,12,14,.30);transition:opacity .3s,visibility .3s}
+  #gate.off{opacity:0;visibility:hidden}
+  #gate div{font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:14px;
+    letter-spacing:.16em;text-transform:uppercase;color:var(--bone);
+    background:rgba(12,15,17,.9);border:1px solid var(--line);border-radius:4px;padding:12px 20px}
+  #gate small{display:block;font-family:"Roboto Mono",monospace;font-size:9.5px;letter-spacing:.12em;
+    color:var(--dim);margin-top:6px;text-transform:none}
+  #live{position:absolute;top:14px;left:22px;z-index:18;font-family:"Roboto Mono",monospace;
+    font-size:9.5px;letter-spacing:.16em;text-transform:uppercase;color:var(--volt);
+    background:rgba(12,15,17,.86);border:1px solid rgba(198,240,75,.3);border-radius:3px;
+    padding:6px 10px;opacity:0;transition:opacity .3s;pointer-events:none}
+  #live.on{opacity:1}
   #stage canvas{display:block}
   #tags{position:absolute;inset:0;pointer-events:none;overflow:hidden}
   .tag{position:absolute;transform:translate(-50%,-50%);white-space:nowrap;font-size:10px;
@@ -107,6 +132,10 @@
 
   @media (max-width:860px){
     #rail,#hint{display:none}
+    #hero{padding:60px 12px 0}
+    #stage{height:min(62svh,540px);min-height:380px;border-radius:10px}
+    #gate div{font-size:13px;padding:11px 16px}
+    #live{left:12px;top:10px}
     #kicker{bottom:92px;left:16px}
     #dock{left:14px;right:14px;bottom:14px;gap:6px}
     button{padding:9px 11px;font-size:12px}
@@ -123,6 +152,7 @@
   <div class="addr">BC Commerce Center &middot; Building A<br>8255 Boynton Beach Blvd &middot; Boynton Beach, FL</div>
 </div>
 
+<div id="hero">
 <div id="stage">
   <div id="tags"></div>
   <div id="kicker">
@@ -144,10 +174,18 @@
       <button id="b-walls">Full height</button>
       <button id="b-tags" class="on">Labels</button>
       <button id="b-people" class="on">People</button>
+      <button id="b-shell">Shell only</button>
+      <button id="b-dusk">Match lights</button>
+      <button id="b-expand">Expand</button>
     </div>
   </div>
   <div id="hint">Drag to orbit &middot; scroll to zoom<br>Shift drag to pan &middot; tap a space to fly to it</div>
   <div id="boot"><div>Loading facility model</div></div>
+  <div id="live">Exploring &middot; Esc to release</div>
+  <div id="gate"><div>Click to explore<small>Until then, scroll moves the page. Two fingers on touch.</small></div></div>
+</div>
+<div class="scrollcue"><a href="#schedule">Area schedule
+  <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M12 5v14M6 13l6 6 6-6"/></svg></a></div>
 </div>
 
 <main>
@@ -167,7 +205,7 @@
 </section>
 
 <section>
-  <div class="sechead"><span class="num">02</span><h2>Area schedule</h2></div>
+  <div class="sechead" id="schedule"><span class="num">02</span><h2>Area schedule</h2></div>
   <table>
     <thead><tr><th>Space</th><th>Dimension</th><th class="num">Area</th></tr></thead>
     <tbody id="sched"></tbody>
@@ -200,6 +238,16 @@
 "use strict";
 var stage = document.getElementById('stage');
 var tagsEl = document.getElementById('tags');
+function clearBoot(){ var b = document.getElementById('boot'); if (b) b.classList.add('gone'); }
+setTimeout(clearBoot, 2500);
+if (!window.THREE || !window.SOG){
+  clearBoot();
+  stage.insertAdjacentHTML('beforeend',
+    '<div style="position:absolute;inset:0;display:grid;place-items:center;text-align:center;' +
+    'font-family:Barlow,sans-serif;font-size:14px;color:#8E979C;padding:24px">' +
+    'The 3D model could not load. Check that model.js sits next to this file.</div>');
+  return;
+}
 var view = SOG.create(stage, {ambient:false});
 var ZONES = view.zones, cam = view.cam, tags = [];
 
@@ -285,9 +333,26 @@ function pickView(name, btn){
   view.clearFocus();
 }
 
-/* ---------- orbit ---------- */
+/* ---------- orbit, gated so the wheel does not steal page scroll ---------- */
+var active = false;
+var gate = document.getElementById('gate');
+var live = document.getElementById('live');
+
+function setActive(on){
+  if (active === on) return;
+  active = on;
+  gate.classList.toggle('off', on);
+  live.classList.toggle('on', on);
+}
+gate.addEventListener('click', function(){ setActive(true); });
+document.addEventListener('keydown', function(e){ if (e.key === 'Escape') setActive(false); });
+document.addEventListener('mousedown', function(e){
+  if (active && !stage.contains(e.target)) setActive(false);
+});
+
 (function(){
   var el = view.renderer.domElement, down = false, sx = 0, sy = 0, pan = false, moved = 0, pinch = 0;
+
   function pick(cx, cy){
     var r = el.getBoundingClientRect();
     var v = new THREE.Vector2(((cx - r.left)/r.width)*2 - 1, -((cy - r.top)/r.height)*2 + 1);
@@ -299,7 +364,9 @@ function pickView(name, btn){
       pickZone(z, document.querySelector('.zone[data-zid="' + z.id + '"]'));
     }
   }
+
   el.addEventListener('mousedown', function(e){
+    setActive(true);
     down = true; sx = e.clientX; sy = e.clientY; moved = 0;
     pan = e.shiftKey || e.button === 2;
     view.clearGoal();
@@ -322,36 +389,68 @@ function pickView(name, btn){
     down = false; pan = false;
   });
   el.addEventListener('contextmenu', function(e){ e.preventDefault(); });
+
+  /* the wheel only zooms once the model is active, or with a modifier held.
+     otherwise it falls through and the page scrolls normally. */
   el.addEventListener('wheel', function(e){
+    var zoom = active || e.ctrlKey || e.metaKey;
+    if (!zoom) return;
     e.preventDefault();
     view.clearGoal();
     cam.r = Math.max(28, Math.min(760, cam.r * (1 + Math.sign(e.deltaY) * 0.085)));
   }, {passive:false});
+
+  /* touch: one finger scrolls the page, two fingers drive the model */
   el.addEventListener('touchstart', function(e){
-    if (e.touches.length === 1){
-      down = true; sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved = 0; view.clearGoal();
-    } else if (e.touches.length === 2){
-      down = false;
+    if (e.touches.length === 2){
+      down = true;
+      sx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      sy = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      moved = 0;
       pinch = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
+      view.clearGoal();
+      setActive(true);
+    } else if (e.touches.length === 1){
+      down = false;
+      sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved = 0;
     }
   }, {passive:true});
   el.addEventListener('touchmove', function(e){
-    if (e.touches.length === 1 && down){
-      var dx = e.touches[0].clientX - sx, dy = e.touches[0].clientY - sy;
-      sx = e.touches[0].clientX; sy = e.touches[0].clientY; moved += Math.abs(dx) + Math.abs(dy);
-      cam.theta -= dx * 0.005; cam.phi -= dy * 0.004;
-    } else if (e.touches.length === 2){
+    if (e.touches.length === 2){
+      e.preventDefault();
+      var mx = (e.touches[0].clientX + e.touches[1].clientX) / 2;
+      var my = (e.touches[0].clientY + e.touches[1].clientY) / 2;
+      var dx = mx - sx, dy = my - sy;
+      sx = mx; sy = my;
+      cam.theta -= dx * 0.005;
+      cam.phi -= dy * 0.004;
       var d = Math.hypot(e.touches[0].clientX - e.touches[1].clientX, e.touches[0].clientY - e.touches[1].clientY);
       if (pinch) cam.r = Math.max(28, Math.min(760, cam.r * (pinch / d)));
       pinch = d;
+    } else if (e.touches.length === 1){
+      moved += Math.abs(e.touches[0].clientX - sx) + Math.abs(e.touches[0].clientY - sy);
     }
-    e.preventDefault();
   }, {passive:false});
   el.addEventListener('touchend', function(e){
-    if (down && moved < 8 && e.changedTouches.length) pick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+    if (!down && moved < 8 && e.changedTouches.length){
+      pick(e.changedTouches[0].clientX, e.changedTouches[0].clientY);
+    }
     down = false; pinch = 0;
   });
 })();
+
+/* pause the render loop whenever the stage is off screen */
+if ('IntersectionObserver' in window){
+  new IntersectionObserver(function(entries){
+    var vis = entries[0].isIntersecting;
+    view.setPaused(!vis);
+    view.setQuality(vis);
+    if (!vis) setActive(false);
+  }, {threshold:0.04}).observe(stage);
+}
+document.addEventListener('visibilitychange', function(){
+  view.setPaused(document.hidden);
+});
 
 /* ---------- controls ---------- */
 document.querySelectorAll('#views button').forEach(function(b){
@@ -374,6 +473,31 @@ bp.addEventListener('click', function(){
   shown = !shown;
   bp.classList.toggle('on', shown);
   view.setPeople(shown);
+});
+var bs = document.getElementById('b-shell'), fitted = true;
+bs.addEventListener('click', function(){
+  fitted = !fitted;
+  bs.classList.toggle('on', !fitted);
+  bs.textContent = fitted ? 'Shell only' : 'Fit out';
+  view.setFitOut(fitted);
+});
+var bd = document.getElementById('b-dusk'), dusk = false;
+bd.addEventListener('click', function(){
+  dusk = !dusk;
+  bd.classList.toggle('on', dusk);
+  bd.textContent = dusk ? 'Daylight' : 'Match lights';
+  view.setDusk(dusk);
+});
+
+var be = document.getElementById('b-expand'), big = false;
+be.addEventListener('click', function(){
+  big = !big;
+  stage.classList.toggle('expanded', big);
+  document.body.classList.toggle('locked', big);
+  be.classList.toggle('on', big);
+  be.textContent = big ? 'Collapse' : 'Expand';
+  if (big) setActive(true);
+  requestAnimationFrame(view.resize);
 });
 
 window.addEventListener('resize', view.resize);

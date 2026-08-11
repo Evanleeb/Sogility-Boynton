@@ -11,24 +11,28 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700&family=Barlow:wght@400;500&family=Roboto+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-  :root{
-    --void:#0B0E10; --bone:#EAE7DF; --dim:#8E979C; --volt:#C6F04B; --line:#2C3439;
-  }
+  :root{ --void:#07090A; --bone:#EAE7DF; --dim:#8E979C; --volt:#C6F04B; --line:#2C3439; }
   *{box-sizing:border-box}
   html,body{height:100%}
   body{margin:0;background:var(--void);color:var(--bone);overflow:hidden;
     font-family:"Barlow",system-ui,sans-serif;-webkit-font-smoothing:antialiased}
 
-  #scene{position:fixed;inset:0;z-index:0}
+  #scene{position:fixed;inset:0;z-index:0;
+    background:radial-gradient(90% 70% at 62% 46%, #16201A 0%, #0A0E10 55%, #07090A 100%)}
   #scene canvas{display:block}
 
-  /* the model reads as texture, not as the subject */
   #veil{position:fixed;inset:0;z-index:1;pointer-events:none;
     background:
-      radial-gradient(120% 90% at 68% 42%, rgba(11,14,16,.20) 0%, rgba(11,14,16,.78) 58%, rgba(11,14,16,.96) 100%),
-      linear-gradient(90deg, rgba(11,14,16,.97) 0%, rgba(11,14,16,.72) 38%, rgba(11,14,16,.28) 100%)}
-  #grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.5;
-    background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.018) 0 1px, transparent 1px 3px)}
+      radial-gradient(120% 90% at 68% 44%, rgba(7,9,10,.10) 0%, rgba(7,9,10,.72) 56%, rgba(7,9,10,.95) 100%),
+      linear-gradient(90deg, rgba(7,9,10,.96) 0%, rgba(7,9,10,.70) 40%, rgba(7,9,10,.22) 100%)}
+  #grain{position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.45;
+    background-image:repeating-linear-gradient(0deg, rgba(255,255,255,.02) 0 1px, transparent 1px 3px)}
+  #sweep{position:fixed;left:0;right:0;top:0;height:170px;z-index:2;pointer-events:none;opacity:.5;
+    background:linear-gradient(180deg, transparent, rgba(198,240,75,.055) 45%, transparent)}
+  @media (prefers-reduced-motion:no-preference){
+    #sweep{animation:sweep 9s linear infinite}
+    @keyframes sweep{from{transform:translateY(-190px)}to{transform:translateY(105vh)}}
+  }
 
   #wrap{position:fixed;inset:0;z-index:3;display:flex;flex-direction:column;
     justify-content:space-between;padding:34px 40px 0;pointer-events:none}
@@ -40,58 +44,74 @@
   .loc{font-family:"Roboto Mono",monospace;font-size:10.5px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--dim);text-align:right;line-height:1.9}
 
-  .mid{max-width:min(760px,86vw)}
+  .mid{max-width:min(780px,88vw)}
   .status{display:inline-flex;align-items:center;gap:9px;font-family:"Roboto Mono",monospace;
     font-size:10.5px;letter-spacing:.26em;text-transform:uppercase;color:var(--volt);margin-bottom:20px}
   .dot{width:6px;height:6px;border-radius:50%;background:var(--volt)}
-  @media (prefers-reduced-motion:no-preference){
-    .dot{animation:pulse 2.4s ease-in-out infinite}
-    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
-  }
 
   h1{font-family:"Barlow Condensed",sans-serif;font-weight:700;text-transform:uppercase;
     margin:0;line-height:.84;letter-spacing:-.005em;font-size:clamp(56px,12.5vw,168px)}
   h1 .l2{color:var(--volt)}
-  .rule{width:64px;height:2px;background:var(--volt);margin:28px 0 20px}
-  .blurb{font-size:16px;color:#B6BDC1;max-width:47ch;line-height:1.65;margin:0}
+  h1 .m{display:block;overflow:hidden}
+  h1 .m i{display:block;font-style:normal;transform:translateY(104%)}
+  .rule{width:0;height:2px;background:var(--volt);margin:28px 0 20px}
+  .blurb{font-size:16px;color:#B6BDC1;max-width:48ch;line-height:1.65;margin:0;opacity:0}
 
-  .facts{display:flex;flex-wrap:wrap;gap:0;margin:34px 0 0;border-top:1px solid var(--line);
-    border-bottom:1px solid var(--line)}
+  .facts{display:flex;flex-wrap:wrap;margin:34px 0 0;border-top:1px solid var(--line);
+    border-bottom:1px solid var(--line);opacity:0}
   .fact{padding:15px 30px 15px 0;margin-right:30px;border-right:1px solid var(--line)}
   .fact:last-child{border-right:0;margin-right:0}
   .fact b{display:block;font-family:"Barlow Condensed",sans-serif;font-weight:700;font-size:30px;line-height:1}
   .fact span{font-family:"Roboto Mono",monospace;font-size:10px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--dim);display:block;margin-top:6px}
 
-  .cta{display:inline-flex;align-items:center;gap:11px;margin-top:32px;pointer-events:auto;
+  .row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:32px;opacity:0}
+  .cta{display:inline-flex;align-items:center;gap:11px;pointer-events:auto;
     font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;letter-spacing:.13em;
-    text-transform:uppercase;color:var(--void);background:var(--volt);text-decoration:none;
+    text-transform:uppercase;color:#0B0E10;background:var(--volt);text-decoration:none;
     padding:14px 24px;border-radius:3px;transition:transform .18s,background .18s}
   .cta:hover{background:#D7FF63;transform:translateX(4px)}
   .cta svg{width:15px;height:15px}
+  .ghost{pointer-events:auto;background:transparent;border:1px solid var(--line);color:var(--bone);
+    font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;letter-spacing:.13em;
+    text-transform:uppercase;padding:13px 18px;border-radius:3px;cursor:pointer;transition:border-color .18s,color .18s}
+  .ghost:hover{border-color:var(--volt);color:var(--volt)}
 
-  /* marquee, borrowed from Sogility's own homepage device */
   .strip{position:relative;z-index:3;overflow:hidden;border-top:1px solid var(--line);
-    background:rgba(11,14,16,.82);backdrop-filter:blur(6px);margin:0 -40px}
+    background:rgba(7,9,10,.82);backdrop-filter:blur(6px);margin:0 -40px}
   .track{display:flex;white-space:nowrap;font-family:"Barlow Condensed",sans-serif;font-weight:700;
     font-size:15px;letter-spacing:.34em;text-transform:uppercase;color:#39424A;padding:13px 0;width:max-content}
   .track span{padding:0 26px}
   .track span.hot{color:var(--volt)}
-  @media (prefers-reduced-motion:no-preference){
-    .track{animation:slide 34s linear infinite}
-    @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
-  }
 
   #boot{position:fixed;inset:0;z-index:9;background:var(--void);display:grid;place-items:center;
     transition:opacity .8s;font-family:"Roboto Mono",monospace;font-size:10px;
     letter-spacing:.3em;text-transform:uppercase;color:#4A5359}
   #boot.gone{opacity:0;pointer-events:none}
 
+  @media (prefers-reduced-motion:no-preference){
+    .dot{animation:pulse 2.4s ease-in-out infinite}
+    @keyframes pulse{0%,100%{opacity:1;transform:scale(1)}50%{opacity:.35;transform:scale(.7)}}
+    .track{animation:slide 34s linear infinite}
+    @keyframes slide{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+    .go h1 .m i{transform:translateY(0);transition:transform 1s cubic-bezier(.16,.84,.32,1)}
+    .go h1 .m:nth-child(2) i{transition-delay:.12s}
+    .go .rule{width:64px;transition:width .8s cubic-bezier(.16,.84,.32,1) .5s}
+    .go .blurb{opacity:1;transition:opacity .9s ease .62s}
+    .go .facts{opacity:1;transition:opacity .9s ease .78s}
+    .go .row{opacity:1;transition:opacity .9s ease .9s}
+  }
+  @media (prefers-reduced-motion:reduce){
+    h1 .m i{transform:none}
+    .rule{width:64px}
+    .blurb,.facts,.row{opacity:1}
+  }
+
   @media (max-width:820px){
     #wrap{padding:22px 20px 0}
     #veil{background:
-      radial-gradient(140% 80% at 60% 32%, rgba(11,14,16,.18) 0%, rgba(11,14,16,.8) 60%, rgba(11,14,16,.97) 100%),
-      linear-gradient(180deg, rgba(11,14,16,.6) 0%, rgba(11,14,16,.35) 30%, rgba(11,14,16,.92) 78%)}
+      radial-gradient(140% 80% at 60% 34%, rgba(7,9,10,.10) 0%, rgba(7,9,10,.76) 60%, rgba(7,9,10,.96) 100%),
+      linear-gradient(180deg, rgba(7,9,10,.55) 0%, rgba(7,9,10,.30) 28%, rgba(7,9,10,.93) 76%)}
     .mark{font-size:20px}
     .loc{font-size:9px}
     .blurb{font-size:14.5px}
@@ -99,7 +119,7 @@
     .fact{padding:12px 18px 12px 0;margin-right:18px}
     .fact b{font-size:22px}
     .strip{margin:0 -20px}
-    .cta{margin-top:22px}
+    .row{margin-top:22px}
   }
   @media (max-height:700px) and (min-width:821px){
     h1{font-size:clamp(48px,8vw,104px)}
@@ -111,6 +131,7 @@
 
 <div id="scene"></div>
 <div id="veil"></div>
+<div id="sweep"></div>
 <div id="grain"></div>
 
 <div id="wrap">
@@ -121,25 +142,26 @@
 
   <div class="mid">
     <div class="status"><span class="dot"></span>Now in design</div>
-    <h1>Boynton<br><span class="l2">Beach</span></h1>
+    <h1><span class="m"><i>Boynton</i></span><span class="m"><i class="l2">Beach</i></span></h1>
     <div class="rule"></div>
     <p class="blurb">Technology driven soccer training is coming to South Florida. Two full technical zones, a dedicated athlete development floor, and an outdoor futsal court, all under one roof at BC Commerce Center.</p>
 
     <div class="facts">
-      <div class="fact"><b>20,673</b><span>Square feet</span></div>
-      <div class="fact"><b>2</b><span>80 x 50 zones</span></div>
-      <div class="fact"><b>4</b><span>Training grids</span></div>
-      <div class="fact"><b>1</b><span>Outdoor futsal court</span></div>
+      <div class="fact"><b data-to="20673" data-comma="1">0</b><span>Square feet</span></div>
+      <div class="fact"><b data-to="2">0</b><span>80 x 50 zones</span></div>
+      <div class="fact"><b data-to="4">0</b><span>Training grids</span></div>
+      <div class="fact"><b data-to="1">0</b><span>Outdoor futsal court</span></div>
     </div>
 
-    <a class="cta" href="plan.html">Walk the space
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-    </a>
+    <div class="row">
+      <a class="cta" href="plan.html">Walk the space
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      </a>
+      <button class="ghost" id="b-light">Daylight</button>
+    </div>
   </div>
 
-  <div class="strip">
-    <div class="track" id="track"></div>
-  </div>
+  <div class="strip"><div class="track" id="track"></div></div>
 </div>
 
 <div id="boot">Loading</div>
@@ -148,6 +170,35 @@
 <script src="model.js"></script>
 <script>
 (function(){
+  "use strict";
+
+  var booted = false;
+  function clearBoot(){
+    if (booted) return;
+    booted = true;
+    var b = document.getElementById('boot');
+    if (b) b.classList.add('gone');
+    document.body.classList.add('go');
+    countUp();
+  }
+  /* the page must never hang on a missing script or a WebGL failure */
+  setTimeout(clearBoot, 2500);
+  window.addEventListener('load', function(){ setTimeout(clearBoot, 300); });
+
+  function countUp(){
+    document.querySelectorAll('.fact b').forEach(function(el){
+      var to = parseInt(el.dataset.to, 10), comma = el.dataset.comma, t = 0;
+      var dur = to > 100 ? 1100 : 700, t0 = performance.now() + 900;
+      (function frame(now){
+        t = Math.max(0, Math.min(1, (now - t0) / dur));
+        var e = 1 - Math.pow(1 - t, 3);
+        var v = Math.round(to * e);
+        el.textContent = comma ? v.toLocaleString() : v;
+        if (t < 1) requestAnimationFrame(frame);
+      })(performance.now());
+    });
+  }
+
   var words = ['Technical Soccer Zone','TechTouch','Circuit Training','On The Ball','Athlete Development','Vision Training'];
   var track = document.getElementById('track'), html = '';
   for (var pass = 0; pass < 2; pass++)
@@ -155,10 +206,32 @@
       html += '<span' + (i % 3 === 1 ? ' class="hot"' : '') + '>' + words[i] + '</span><span>&middot;</span>';
   track.innerHTML = html;
 
-  var host = document.getElementById('scene');
-  var view = SOG.create(host, {ambient:true});
-  window.addEventListener('resize', view.resize);
-  setTimeout(function(){ document.getElementById('boot').classList.add('gone'); }, 600);
+  var view = null;
+  try {
+    if (!window.THREE) throw new Error('three.js did not load');
+    if (!window.SOG) throw new Error('model.js did not load, check that it is in the same folder');
+    var host = document.getElementById('scene');
+    view = SOG.create(host, {ambient:true, cinematic:true, dusk:true});
+    window.addEventListener('resize', view.resize);
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (!reduce){
+      window.addEventListener('mousemove', function(e){
+        view.parallax((e.clientX / window.innerWidth - 0.5) * 2, (e.clientY / window.innerHeight - 0.5) * 2);
+      });
+    }
+    var dusk = true, bl = document.getElementById('b-light');
+    bl.addEventListener('click', function(){
+      dusk = !dusk;
+      view.setDusk(dusk);
+      bl.textContent = dusk ? 'Daylight' : 'Match lights';
+    });
+  } catch (err) {
+    console.error('[sogility]', err.message);
+    document.getElementById('b-light').style.display = 'none';
+  }
+
+  clearBoot();
 })();
 </script>
 </body>

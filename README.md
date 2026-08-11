@@ -8,7 +8,7 @@ Prepared by Butters Construction and Development. Schematic only, not for constr
 
 ## Files
 
-    index.html    public coming soon page, model orbiting behind the type
+    index.html    public coming soon page, cinematic camera behind the type
     plan.html     interactive space plan with the program rail and area schedule
     model.js      the 3D facility model, shared by both pages
     .nojekyll     tells GitHub Pages to serve the files as is
@@ -75,3 +75,32 @@ Useful helpers further down model.js, all taking feet:
 - Confirm the outdoor futsal court does not conflict with truck
   circulation or required parking
 - Confirm overhead door locations on the south walls
+
+## Scrolling past the model
+
+The space plan frames the model in a panel rather than filling the window,
+so there is page either side of it to scroll on. The wheel only zooms the
+model after you click into it, or if you hold ctrl or cmd. Press Esc, or
+click anywhere outside the panel, to hand scrolling back to the page. On
+touch, one finger scrolls the page and two fingers drive the model.
+
+Expand blows the panel up to fill the window for presenting. The render
+loop pauses whenever the panel is off screen or the tab is in the
+background, so scrolling the rest of the page stays smooth.
+
+## Page controls
+
+Landing page: a Daylight / Match lights button switches the model between
+dusk with the high bays lit and normal daylight.
+
+Space plan: Expand fills the window, Full height toggles the walls between the 15 foot cutaway and
+full clear height, Labels hides the floating callouts, People hides the
+figures, Shell only strips every piece of fit out so the raw box shows,
+and Match lights switches to the dusk render.
+
+## If a page shows only "Loading"
+
+model.js did not load. Both pages need it in the same folder. Confirm all
+of index.html, plan.html and model.js are in the repo root, then hard
+refresh. Both pages now fall through and render without the model rather
+than hanging, so a stuck loading screen means an older copy is cached.

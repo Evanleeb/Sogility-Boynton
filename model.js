@@ -112,7 +112,8 @@ function create(host, opts){
   renderer.toneMappingExposure = ambient ? 1.0 : 1.08;
   host.insertBefore(renderer.domElement, host.firstChild);
 
-  scene.add(new THREE.HemisphereLight(0xEFF4FF, 0x4E5448, 0.72));
+  var hemi = new THREE.HemisphereLight(0xEFF4FF, 0x4E5448, 0.72);
+  scene.add(hemi);
   var sun = new THREE.DirectionalLight(0xFFF4E4, 1.12);
   sun.position.set(280, 330, 230);
   sun.castShadow = true;
@@ -126,7 +127,9 @@ function create(host, opts){
   fill.position.set(-220, 160, -150); scene.add(fill);
 
   var root = new THREE.Group(); scene.add(root);
-  var extWalls = [], people = [], balls = [], doors = [];
+  var fitOut = new THREE.Group(); root.add(fitOut);
+  var PARENT = root;
+  var extWalls = [], people = [], balls = [], doors = [], lamps = [];
 
   /* ---------------- primitives ---------------- */
   function M(c, o){
@@ -140,24 +143,24 @@ function create(host, opts){
     var me = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), m);
     me.position.set(x + w/2, (y0 || 0) + h/2, z + d/2);
     me.castShadow = true; me.receiveShadow = true;
-    (g || root).add(me); return me;
+    (g || PARENT).add(me); return me;
   }
   function CYL(x, y, z, r, h, m, g, lay){
     var me = new THREE.Mesh(new THREE.CylinderGeometry(r, r, h, 12), m);
     me.position.set(x, y, z);
     if (lay) me.rotation.z = Math.PI/2;
-    me.castShadow = true; (g || root).add(me); return me;
+    me.castShadow = true; (g || PARENT).add(me); return me;
   }
   function P(x, z, w, d, m, y){
     var gg = new THREE.PlaneGeometry(w, d); gg.rotateX(-Math.PI/2);
     var me = new THREE.Mesh(gg, m);
     me.position.set(x + w/2, y || 0.06, z + d/2);
-    me.receiveShadow = true; root.add(me); return me;
+    me.receiveShadow = true; PARENT.add(me); return me;
   }
 
   /* ---------------- equipment ---------------- */
   function squatRack(x, z){
-    var g = new THREE.Group(); root.add(g);
+    var g = new THREE.Group(); PARENT.add(g);
     var post = M(COL.steel, {rough:0.4, metal:0.55});
     var bar = M(COL.chrome, {rough:0.25, metal:0.85});
     var plate = M(0x1A1D21, {rough:0.85});
@@ -198,7 +201,7 @@ function create(host, opts){
 
   /* goal with a real mesh net */
   function goal(x, z, w, deep, flip){
-    var g = new THREE.Group(); root.add(g);
+    var g = new THREE.Group(); PARENT.add(g);
     var post = M(0xF2F4F6, {rough:0.32, metal:0.18});
     var H = w > 16 ? 8 : 6.5, dd = deep || 3;
     var zz = flip ? z - dd : z;
@@ -229,7 +232,7 @@ function create(host, opts){
       var m = new THREE.Mesh(new THREE.PlaneGeometry(len, h), netMaterial(len * 0.5, h * 0.5, 0.34));
       m.rotation.y = rotY;
       m.position.set(px, h/2, pz);
-      root.add(m);
+      PARENT.add(m);
     }
     panel(x + w/2, z, w, 0);
     panel(x + w/2, z + d, w, 0);
@@ -248,7 +251,7 @@ function create(host, opts){
 
   /* sectional overhead door. openFrac 0 = closed, 1 = fully up */
   function rollDoor(x, z, w, h, openFrac, thick){
-    var g = new THREE.Group(); root.add(g);
+    var g = new THREE.Group(); PARENT.add(g);
     var rail = M(0x6C737A, {rough:0.45, metal:0.55});
     var slat = M(0xC9CDD1, {rough:0.42, metal:0.35});
     var drum = M(0x565C63, {rough:0.5, metal:0.5});
@@ -283,12 +286,12 @@ function create(host, opts){
     for (var i = 0; i < 7; i++){
       var b = new THREE.Mesh(new THREE.SphereGeometry(0.36, 12, 10), ball);
       b.position.set(x + 0.7 + (i % 3) * 1.0, 1.5 + Math.floor(i/3) * 0.7, z + 0.8 + (i % 2) * 1.1);
-      b.castShadow = true; root.add(b);
+      b.castShadow = true; PARENT.add(b);
     }
   }
   function loose(x, z){
     var b = new THREE.Mesh(new THREE.SphereGeometry(0.36, 14, 12), M(0xF4F6F8, {rough:0.6}));
-    b.position.set(x, 0.36, z); b.castShadow = true; root.add(b);
+    b.position.set(x, 0.36, z); b.castShadow = true; PARENT.add(b);
     balls.push({m:b, ox:x, oz:z, p:Math.random() * 6.28, sp:0.4 + Math.random() * 0.5, r:6 + Math.random() * 8});
   }
   function bench(x, z, len, vert){
@@ -342,7 +345,7 @@ function create(host, opts){
   }
 
   function person(x, z, kitCol, walk){
-    var g = new THREE.Group(); root.add(g); people.push(g);
+    var g = new THREE.Group(); PARENT.add(g); people.push(g);
     var skin = M(0xC49A78, {rough:0.9}), kit = M(kitCol, {rough:0.85}), leg = M(0x2A2E33, {rough:0.85});
     CYL(x, 3.35, z, 0.5, 2.0, kit, g);
     CYL(x - 0.25, 1.15, z, 0.19, 2.3, leg, g);
@@ -356,7 +359,30 @@ function create(host, opts){
   }
   function highBay(x, z){
     B(x, z, 2.2, 1.2, 0.5, M(0x2F343A, {rough:0.5, metal:0.4}), 27.5);
-    B(x + 0.15, z + 0.1, 1.9, 1.0, 0.1, new THREE.MeshBasicMaterial({color:0xFFF6E2}), 27.4);
+    var lens = new THREE.MeshBasicMaterial({color:0xFFF6E2});
+    B(x + 0.15, z + 0.1, 1.9, 1.0, 0.1, lens, 27.4);
+    lamps.push(lens);
+  }
+
+  /* interior wall graphic */
+  function graphic(x, z, w, h, y, rotY, line1, line2){
+    var c = document.createElement('canvas');
+    c.width = 1024; c.height = 256;
+    var g2 = c.getContext('2d');
+    g2.fillStyle = '#12161A'; g2.fillRect(0, 0, 1024, 256);
+    g2.fillStyle = '#C6F04B';
+    g2.font = '700 132px Barlow Condensed, Impact, sans-serif';
+    g2.textBaseline = 'middle';
+    g2.fillText(line1, 46, 96);
+    g2.fillStyle = '#8E979C';
+    g2.font = '600 46px Barlow Condensed, Impact, sans-serif';
+    g2.fillText(line2, 50, 186);
+    var t = new THREE.CanvasTexture(c);
+    var m = new THREE.Mesh(new THREE.PlaneGeometry(w, h),
+      new THREE.MeshBasicMaterial({map:t}));
+    m.rotation.y = rotY;
+    m.position.set(x, y, z);
+    PARENT.add(m);
   }
   function cone(x, z){ B(x, z, 1.1, 1.1, 1.5, M(0xD9721F, {rough:0.9})); }
   function ladder(x, z, n){
@@ -379,7 +405,7 @@ function create(host, opts){
     P(x+i, z+d/2, w-2*i, t, m, 0.11);
     var r = Math.min(w, d) * 0.14;
     var ring = new THREE.Mesh(new THREE.RingGeometry(r - 0.3, r, 44).rotateX(-Math.PI/2), m);
-    ring.position.set(x + w/2, 0.11, z + d/2); root.add(ring);
+    ring.position.set(x + w/2, 0.11, z + d/2); PARENT.add(ring);
   }
   function extWall(x, z, w, d){
     var g = new THREE.BoxGeometry(w, FULL, d); g.translate(0, FULL/2, 0);
@@ -462,7 +488,11 @@ function create(host, opts){
     for (var hz = 20; hz < 188; hz += 30)
       if (hx < 64 || hz < 132) highBay(hx, hz);
 
-  /* fit out */
+  /* fit out (toggleable as one group) */
+  PARENT = fitOut;
+  graphic(1.0, 60, 46, 11, 17, Math.PI/2, 'SOGILITY', 'TRAIN DIFFERENT. GET BETTER.');
+  graphic(1.0, 140, 34, 8.5, 15, Math.PI/2, 'TECHNICAL ZONE', 'TSZ · TECHTOUCH · ON THE BALL');
+  graphic(92, 134.6, 30, 7.5, 12, 0, 'FUTSAL', 'BOYNTON BEACH');
   squatRack(81.5, 47); squatRack(88, 47); squatRack(94.5, 47);
   dbRack(81.5, 66, 8);
   plyoStack(104.5, 47.5);
@@ -513,12 +543,47 @@ function create(host, opts){
     [78,150],[86,160],[95,168],[80,180],[92,186],[74,170]
   ];
   spots.forEach(function(s, i){ person(s[0], s[1], kits[i % kits.length], i % 3 === 0); });
+  PARENT = root;
+
+  /* ---------------- dusk / match lighting ---------------- */
+  var pointLights = [];
+  function setDusk(on){
+    scene.background = new THREE.Color(on ? 0x070909 : 0x0C0F11);
+    scene.fog.color = new THREE.Color(on ? 0x070909 : 0x0C0F11);
+    sun.intensity = on ? 0.34 : 1.12;
+    sun.color = new THREE.Color(on ? 0xFFD9A8 : 0xFFF4E4);
+    sun.position.set(on ? 420 : 280, on ? 120 : 330, on ? 60 : 230);
+    fill.intensity = on ? 0.12 : 0.3;
+    hemi.intensity = on ? 0.26 : 0.72;
+    lamps.forEach(function(m){ m.color.setHex(on ? 0xFFFFFF : 0xFFF6E2); });
+    pointLights.forEach(function(l){ l.intensity = on ? l.userData.max : 0; });
+    renderer.toneMappingExposure = on ? 1.22 : (ambient ? 1.0 : 1.08);
+  }
+  [[35,60],[35,140],[95,60],[95,110],[89,167]].forEach(function(p){
+    var l = new THREE.PointLight(0xFFF1D6, 0, 130, 2);
+    l.position.set(p[0], 24, p[1]);
+    l.userData.max = 1.5;
+    scene.add(l); pointLights.push(l);
+  });
+  if (opts.dusk) setDusk(true);
 
   /* ---------------- camera + loop ---------------- */
   var cam = ambient
     ? {r:330, phi:0.66, theta:0.60, tx:60, ty:10, tz:98}
     : {r:310, phi:0.60, theta:1.02, tx:60, ty:8,  tz:98};
   var goal_ = null, hi = null, hiT = 0, t0 = 0;
+  var par = {x:0, y:0, tx:0, ty:0};
+
+  /* scripted hero move: wide, down to the court, inside, weight floor, back up */
+  var PATH = [
+    {r:340, phi:0.62, theta:0.55, tx:60,  ty:10, tz:98,  hold:5.0, ease:3.0},
+    {r:150, phi:1.02, theta:1.02, tx:88,  ty:6,  tz:168, hold:4.0, ease:4.0},
+    {r:96,  phi:1.36, theta:0.60, tx:35,  ty:6,  tz:70,  hold:4.5, ease:4.0},
+    {r:74,  phi:1.30, theta:1.95, tx:99,  ty:6,  tz:58,  hold:4.0, ease:3.5},
+    {r:250, phi:0.42, theta:1.55, tx:60,  ty:10, tz:110, hold:4.0, ease:4.0}
+  ];
+  var pIdx = 0, pT = 0, pFrom = null;
+  function ease(u){ return u < 0.5 ? 4*u*u*u : 1 - Math.pow(-2*u + 2, 3) / 2; }
 
   function setView(name){ goal_ = Object.assign({}, VIEWS[name]); hi = null; }
   function focus(z){
@@ -535,13 +600,33 @@ function create(host, opts){
   }
 
   var frameCbs = [];
+  var paused = false;
   function tick(){
     requestAnimationFrame(tick);
+    if (paused) return;
     t0 += 0.016;
 
     if (ambient){
-      cam.theta += 0.00055;
-      cam.phi = 0.60 + Math.sin(t0 * 0.06) * 0.07;
+      if (opts.cinematic){
+        var k = PATH[pIdx], nxt = PATH[(pIdx + 1) % PATH.length];
+        pT += 0.016;
+        if (pT < k.hold){
+          if (pFrom) { cam.r = k.r; cam.phi = k.phi; cam.theta = k.theta; cam.tx = k.tx; cam.ty = k.ty; cam.tz = k.tz; }
+          cam.theta += 0.00022;
+        } else {
+          var u = Math.min(1, (pT - k.hold) / nxt.ease), e = ease(u);
+          cam.r     = k.r     + (nxt.r     - k.r)     * e;
+          cam.phi   = k.phi   + (nxt.phi   - k.phi)   * e;
+          cam.theta = k.theta + (nxt.theta - k.theta) * e;
+          cam.tx    = k.tx    + (nxt.tx    - k.tx)    * e;
+          cam.ty    = k.ty    + (nxt.ty    - k.ty)    * e;
+          cam.tz    = k.tz    + (nxt.tz    - k.tz)    * e;
+          if (u >= 1){ pIdx = (pIdx + 1) % PATH.length; pT = 0; pFrom = true; }
+        }
+      } else {
+        cam.theta += 0.00055;
+        cam.phi = 0.60 + Math.sin(t0 * 0.06) * 0.07;
+      }
     } else if (goal_){
       var done = true;
       ['r','phi','theta','tx','ty','tz'].forEach(function(k){
@@ -551,11 +636,14 @@ function create(host, opts){
       });
       if (done) goal_ = null;
     }
-    cam.phi = Math.max(0.07, Math.min(Math.PI/2 - 0.03, cam.phi));
+    par.x += (par.tx - par.x) * 0.045;
+    par.y += (par.ty - par.y) * 0.045;
+    var phiE = Math.max(0.07, Math.min(Math.PI/2 - 0.03, cam.phi + par.y * 0.06));
+    var thE = cam.theta + par.x * 0.10;
     camera.position.set(
-      cam.tx + cam.r * Math.sin(cam.phi) * Math.cos(cam.theta),
-      Math.max(2.5, cam.ty + cam.r * Math.cos(cam.phi)),
-      cam.tz + cam.r * Math.sin(cam.phi) * Math.sin(cam.theta));
+      cam.tx + cam.r * Math.sin(phiE) * Math.cos(thE),
+      Math.max(2.5, cam.ty + cam.r * Math.cos(phiE)),
+      cam.tz + cam.r * Math.sin(phiE) * Math.sin(thE));
     camera.lookAt(cam.tx, cam.ty, cam.tz);
 
     balls.forEach(function(b){
@@ -584,7 +672,12 @@ function create(host, opts){
     scene:scene, camera:camera, renderer:renderer, root:root, cam:cam,
     zones:ZONES, views:VIEWS,
     setView:setView, focus:focus, setWalls:setWalls, setPeople:setPeople,
+    setDusk:setDusk,
+    setFitOut:function(on){ fitOut.visible = on; },
+    parallax:function(x, y){ par.tx = x; par.ty = y; },
     resize:resize, onFrame:function(fn){ frameCbs.push(fn); },
+    setPaused:function(p){ paused = p; },
+    setQuality:function(hi){ renderer.setPixelRatio(hi ? Math.min(window.devicePixelRatio, 2) : 1); },
     clearGoal:function(){ goal_ = null; },
     clearFocus:function(){ hi = null; }
   };
