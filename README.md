@@ -16,10 +16,10 @@ Everything is self contained. The only external dependencies are three.js
 
 ## Deploy to GitHub Pages
 
-1. Create a repo, for example Evanleeb/Sogility-Building-A
+1. Create a repo, for example Evanleeb/Sogility-Boynton
 2. Upload index.html, README.md and .nojekyll to the root of the main branch
 3. Settings, Pages, Source: Deploy from a branch, Branch: main, Folder: / (root)
-4. The site publishes at https://evanleeb.github.io/Sogility-Building-A/
+4. The site publishes at https://evanleeb.github.io/Sogility-Boynton/
 
 ## Editing the plan
 
