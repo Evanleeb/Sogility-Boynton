@@ -69,13 +69,66 @@
   .fact span{font-family:"Roboto Mono",monospace;font-size:10px;letter-spacing:.16em;
     text-transform:uppercase;color:var(--dim);display:block;margin-top:6px}
 
-  .row{display:flex;align-items:center;gap:18px;flex-wrap:wrap;margin-top:32px;opacity:0}
-  .cta{display:inline-flex;align-items:center;gap:11px;pointer-events:auto;
-    font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:15px;letter-spacing:.13em;
-    text-transform:uppercase;color:#0B0E10;background:var(--volt);text-decoration:none;
-    padding:14px 24px;border-radius:3px;transition:transform .18s,background .18s}
-  .cta:hover{background:#D7FF63;transform:translateX(4px)}
-  .cta svg{width:15px;height:15px}
+/* ---------- kick to enter ---------- */
+  .row{display:block;margin-top:30px;opacity:0}
+  .kick{display:inline-block;pointer-events:auto;text-decoration:none;cursor:pointer;
+    -webkit-tap-highlight-color:transparent}
+  .kick:focus-visible{outline:2px solid var(--volt);outline-offset:6px;border-radius:6px}
+  .pitch{display:block;width:clamp(210px,25vw,268px);height:auto;overflow:visible}
+  .ground{stroke:rgba(234,231,223,.16);stroke-width:1}
+  .post{fill:#EFEDE6}
+  .netrect,.goal{transform-origin:134px 66px}
+  .pocket{opacity:0;transform-origin:196px 66px;transform:scale(.3)}
+  .ball{fill:#F5F7F9}
+  .pip{fill:#1B1F24}
+  .shadow{fill:rgba(0,0,0,.42)}
+  .ballg,.shadow{transform-origin:46px 96px}
+
+  .kicklabel{display:block;position:relative;margin-top:12px;height:18px}
+  .kicklabel b{position:absolute;left:0;top:0;font-family:"Barlow Condensed",sans-serif;
+    font-weight:600;font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+    color:var(--volt);white-space:nowrap}
+  .kicklabel .b{opacity:0;transform:translateY(5px)}
+  .kick.done .kicklabel .a{opacity:0}
+  .kick.done .kicklabel .b{opacity:1;transform:none}
+
+  .alt{display:flex;align-items:center;gap:18px;margin-top:18px;flex-wrap:wrap}
+  .plain{pointer-events:auto;color:var(--dim);font-size:13px;text-decoration:none;
+    border-bottom:1px solid rgba(142,151,156,.35);padding-bottom:2px}
+  .plain:hover{color:var(--bone);border-color:var(--bone)}
+
+  @media (prefers-reduced-motion:no-preference){
+    .ballg,.shadow,.pocket,.netrect{transition:transform .25s ease,opacity .25s ease}
+    .kicklabel b{transition:opacity .25s ease,transform .25s ease}
+    .kick:hover .ballg{transform:translateX(-4px) scale(1.05)}
+    .kick:hover .shadow{transform:translateX(-4px) scaleX(1.05)}
+
+    .kick.fired .ballg{animation:flight .58s cubic-bezier(.3,.02,.5,1) forwards}
+    .kick.fired .shadow{animation:shad .58s cubic-bezier(.3,.02,.5,1) forwards}
+    .kick.done .pocket{opacity:1;transform:scale(1);
+      transition:transform .16s cubic-bezier(.2,1.5,.4,1),opacity .16s ease}
+    .kick.done .netrect{transform:translateX(4px) scaleX(1.05)}
+    .kick.settle .pocket{opacity:0;transform:scale(.72);transition:transform .5s ease,opacity .5s ease}
+    .kick.settle .netrect{transform:none;transition:transform .5s cubic-bezier(.2,1.3,.4,1)}
+
+    @keyframes flight{
+      0%   {transform:translate(0,0) rotate(0) scale(1)}
+      14%  {transform:translate(-9px,1px) rotate(-14deg) scale(1)}
+      45%  {transform:translate(58px,-36px) rotate(320deg) scale(.86)}
+      74%  {transform:translate(108px,-42px) rotate(560deg) scale(.72)}
+      100% {transform:translate(150px,-30px) rotate(760deg) scale(.62)}
+    }
+    @keyframes shad{
+      0%   {transform:translate(0,0) scale(1);opacity:1}
+      14%  {transform:translate(-9px,0) scale(1);opacity:1}
+      45%  {transform:translate(58px,0) scale(.7);opacity:.42}
+      74%  {transform:translate(108px,0) scale(.55);opacity:.3}
+      100% {transform:translate(150px,0) scale(.45);opacity:.22}
+    }
+  }
+  @media (prefers-reduced-motion:reduce){
+    .kick:hover .ballg{transform:none}
+  }
   .ghost{pointer-events:auto;background:transparent;border:1px solid var(--line);color:var(--bone);
     font-family:"Barlow Condensed",sans-serif;font-weight:600;font-size:13px;letter-spacing:.13em;
     text-transform:uppercase;padding:13px 18px;border-radius:3px;cursor:pointer;transition:border-color .18s,color .18s}
@@ -137,8 +190,11 @@
     .blurb{font-size:14px;max-width:32ch}
     .loc{font-size:8.5px;letter-spacing:.12em}
     .status{margin-bottom:14px;font-size:9.5px}
-    .cta{padding:13px 20px;font-size:14px}
-    .ghost{padding:12px 15px}
+    .pitch{width:min(196px,58vw)}
+    .kicklabel b{font-size:13px}
+    .alt{gap:14px;margin-top:14px}
+    .plain{font-size:12.5px}
+    .ghost{padding:11px 14px;font-size:12px}
   }
   /* phone held sideways: the type has to shrink or it eats the screen */
   @media (max-width:940px) and (orientation:landscape){
@@ -148,7 +204,11 @@
     .facts{margin-top:14px}
     .fact{padding:9px 16px 9px 0;margin-right:16px}
     .fact b{font-size:18px}
-    .row{margin-top:14px}
+    .row{margin-top:12px}
+    .pitch{width:170px}
+    .kicklabel{margin-top:8px;height:16px}
+    .kicklabel b{font-size:12px}
+    .alt{margin-top:10px;gap:12px}
     .status{margin-bottom:10px}
     .strip{display:none}
   }
@@ -181,10 +241,38 @@
     </div>
 
     <div class="row">
-      <a class="cta" href="plan.html">Walk the space
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+      <a class="kick" id="kick" href="plan.html" aria-label="Enter the space plan">
+        <svg class="pitch" viewBox="0 0 268 132" aria-hidden="true" focusable="false">
+          <defs>
+            <pattern id="netmesh" width="9" height="9" patternUnits="userSpaceOnUse">
+              <path d="M0 0 L9 9 M9 0 L0 9" fill="none" stroke="rgba(234,231,223,.30)" stroke-width=".8"/>
+            </pattern>
+          </defs>
+          <line class="ground" x1="14" y1="106" x2="256" y2="106"/>
+          <g class="goal">
+            <rect class="netrect" x="134" y="26" width="108" height="80" fill="url(#netmesh)"/>
+            <ellipse class="pocket" cx="196" cy="66" rx="22" ry="17" fill="url(#netmesh)"/>
+            <rect class="post" x="130" y="22" width="4.5" height="84"/>
+            <rect class="post" x="241" y="22" width="4.5" height="84"/>
+            <rect class="post" x="130" y="22" width="115.5" height="4.5"/>
+          </g>
+          <ellipse class="shadow" cx="46" cy="106" rx="9.5" ry="2.6"/>
+          <g class="ballg">
+            <circle class="ball" cx="46" cy="96" r="9.5"/>
+            <path class="pip" d="M46 90.5l3.6 2.6-1.4 4.3h-4.4l-1.4-4.3z"/>
+            <path class="pip" d="M39.2 100.8l2.3 1.7-.6 2.6-2.6-1.3z"/>
+            <path class="pip" d="M52.8 100.8l-2.3 1.7.6 2.6 2.6-1.3z"/>
+          </g>
+        </svg>
+        <span class="kicklabel">
+          <b class="a">Kick to enter</b>
+          <b class="b">Goal</b>
+        </span>
       </a>
-      <button class="ghost" id="b-light">Daylight</button>
+      <div class="alt">
+        <a class="plain" href="plan.html">or open the space plan</a>
+        <button class="ghost" id="b-light">Daylight</button>
+      </div>
     </div>
   </div>
 
@@ -232,6 +320,39 @@
     for (var i = 0; i < words.length; i++)
       html += '<span' + (i % 3 === 1 ? ' class="hot"' : '') + '>' + words[i] + '</span><span>&middot;</span>';
   track.innerHTML = html;
+
+  /* ---------- kick to enter ---------- */
+  (function(){
+    var kick = document.getElementById('kick');
+    if (!kick) return;
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    var fired = false;
+
+    /* warm the next page so the transition is not followed by a wait */
+    var warmed = false;
+    function warm(){
+      if (warmed) return;
+      warmed = true;
+      var l = document.createElement('link');
+      l.rel = 'prefetch'; l.href = 'plan.html';
+      document.head.appendChild(l);
+    }
+    kick.addEventListener('pointerenter', warm);
+    kick.addEventListener('touchstart', warm, {passive:true});
+
+    kick.addEventListener('click', function(e){
+      /* no animation preference, or a second impatient click, just go */
+      if (reduce) return;
+      if (fired){ return; }
+      e.preventDefault();
+      fired = true;
+      warm();
+      kick.classList.add('fired');
+      setTimeout(function(){ kick.classList.add('done'); }, 560);
+      setTimeout(function(){ kick.classList.add('settle'); }, 760);
+      setTimeout(function(){ window.location.href = kick.getAttribute('href'); }, 1080);
+    });
+  })();
 
   var view = null;
   try {

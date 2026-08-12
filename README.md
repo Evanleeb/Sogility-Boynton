@@ -97,6 +97,30 @@ click outside the panel, to hand scrolling back to the page. On touch, one
 finger scrolls and two fingers drive the model. Expand fills the window for
 presenting. The render loop pauses when the panel is off screen.
 
+## The landing page
+
+The call to action is a ball in front of a goal. Click or tap it, it curls
+into the net, the net bulges, the label flips to Goal and the page moves to
+plan.html. Roughly a second end to end. It is a button shaped like a ball,
+not a game, so it cannot be missed or failed.
+
+Underneath it there is a plain "or open the space plan" link for anyone who
+does not want the theatrics, and the whole animation is skipped for anyone
+with reduced motion turned on, in which case the ball is an ordinary link.
+plan.html is prefetched as soon as the pointer touches the ball, so the
+transition is not followed by a load.
+
+Timing lives in the click handler in index.html, in milliseconds:
+
+    fired    0     ball leaves
+    done     560   net reacts, label flips
+    settle   760   net returns
+    nav      1080  page changes
+
+The flight path is the @keyframes flight rule. It is expressed as offsets
+from the ball's start point, so if you move the ball or the goal in the SVG
+you have to move the keyframes with it.
+
 ## On a phone
 
 The space plan detects a narrow screen and changes shape. The control row
