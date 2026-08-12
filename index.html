@@ -72,21 +72,40 @@
 /* ---------- kick to enter ---------- */
   .row{display:block;margin-top:30px;opacity:0}
   .kick{display:inline-block;pointer-events:auto;text-decoration:none;cursor:pointer;
-    -webkit-tap-highlight-color:transparent}
-  .kick:focus-visible{outline:2px solid var(--volt);outline-offset:6px;border-radius:6px}
-  .pitch{display:block;width:clamp(210px,25vw,268px);height:auto;overflow:visible}
+    -webkit-tap-highlight-color:transparent;position:relative}
+  .kick:focus-visible{outline:2px solid var(--volt);outline-offset:10px;border-radius:8px}
+  .pitch{display:block;width:min(320px,80vw);height:auto;overflow:visible}
+
+  /* on a real screen it sits opposite the headline at hero scale */
+  @media (min-width:901px){
+    .kick{position:absolute;right:clamp(28px,5vw,86px);top:48%;transform:translateY(-50%);
+      z-index:4}
+    .kick::before{content:"";position:absolute;left:50%;top:44%;width:150%;height:150%;
+      transform:translate(-50%,-50%);border-radius:50%;z-index:-1;
+      background:radial-gradient(closest-side,rgba(7,9,10,.62),rgba(7,9,10,0) 72%)}
+    .pitch{width:clamp(300px,30vw,660px)}
+  }
+  @media (min-width:901px) and (max-height:760px){
+    .pitch{width:clamp(280px,24vw,440px)}
+  }
+  @media (min-width:901px){
+    .mid{max-width:min(48%,620px)}
+  }
   .ground{stroke:rgba(234,231,223,.16);stroke-width:1}
   .post{fill:#EFEDE6}
   .netrect,.goal{transform-origin:134px 66px}
   .pocket{opacity:0;transform-origin:196px 66px;transform:scale(.3)}
   .ball{fill:#F5F7F9}
+  .ring{fill:none;stroke:var(--volt);stroke-width:1.4;opacity:0;transform-origin:46px 96px}
   .pip{fill:#1B1F24}
   .shadow{fill:rgba(0,0,0,.42)}
   .ballg,.shadow{transform-origin:46px 96px}
 
-  .kicklabel{display:block;position:relative;margin-top:12px;height:18px}
-  .kicklabel b{position:absolute;left:0;top:0;font-family:"Barlow Condensed",sans-serif;
-    font-weight:600;font-size:14px;letter-spacing:.18em;text-transform:uppercase;
+  .kicklabel{display:block;position:relative;margin-top:clamp(10px,1.4vw,20px);
+    height:clamp(18px,2.2vw,30px)}
+  .kicklabel b{position:absolute;left:0;right:0;top:0;text-align:center;
+    font-family:"Barlow Condensed",sans-serif;font-weight:700;
+    font-size:clamp(14px,1.55vw,24px);letter-spacing:.22em;text-transform:uppercase;
     color:var(--volt);white-space:nowrap}
   .kicklabel .b{opacity:0;transform:translateY(5px)}
   .kick.done .kicklabel .a{opacity:0}
@@ -100,8 +119,16 @@
   @media (prefers-reduced-motion:no-preference){
     .ballg,.shadow,.pocket,.netrect{transition:transform .25s ease,opacity .25s ease}
     .kicklabel b{transition:opacity .25s ease,transform .25s ease}
-    .kick:hover .ballg{transform:translateX(-4px) scale(1.05)}
-    .kick:hover .shadow{transform:translateX(-4px) scaleX(1.05)}
+    .kick:hover .ballg{transform:translateX(-5px) scale(1.06)}
+    .kick:hover .shadow{transform:translateX(-5px) scaleX(1.06)}
+    .ring{animation:ping 2.9s cubic-bezier(.15,.7,.35,1) infinite 1.4s}
+    .kick:hover .ring,.kick.fired .ring{animation:none;opacity:0}
+    @keyframes ping{
+      0%   {transform:scale(1);opacity:0}
+      18%  {opacity:.55}
+      70%  {transform:scale(2.5);opacity:0}
+      100% {transform:scale(2.5);opacity:0}
+    }
 
     .kick.fired .ballg{animation:flight .58s cubic-bezier(.3,.02,.5,1) forwards}
     .kick.fired .shadow{animation:shad .58s cubic-bezier(.3,.02,.5,1) forwards}
@@ -190,7 +217,7 @@
     .blurb{font-size:14px;max-width:32ch}
     .loc{font-size:8.5px;letter-spacing:.12em}
     .status{margin-bottom:14px;font-size:9.5px}
-    .pitch{width:min(196px,58vw)}
+    .pitch{width:min(268px,74vw)}
     .kicklabel b{font-size:13px}
     .alt{gap:14px;margin-top:14px}
     .plain{font-size:12.5px}
@@ -205,7 +232,7 @@
     .fact{padding:9px 16px 9px 0;margin-right:16px}
     .fact b{font-size:18px}
     .row{margin-top:12px}
-    .pitch{width:170px}
+    .pitch{width:210px}
     .kicklabel{margin-top:8px;height:16px}
     .kicklabel b{font-size:12px}
     .alt{margin-top:10px;gap:12px}
@@ -257,6 +284,7 @@
             <rect class="post" x="130" y="22" width="115.5" height="4.5"/>
           </g>
           <ellipse class="shadow" cx="46" cy="106" rx="9.5" ry="2.6"/>
+          <circle class="ring" cx="46" cy="96" r="9.5"/>
           <g class="ballg">
             <circle class="ball" cx="46" cy="96" r="9.5"/>
             <path class="pip" d="M46 90.5l3.6 2.6-1.4 4.3h-4.4l-1.4-4.3z"/>

@@ -99,10 +99,21 @@ presenting. The render loop pauses when the panel is off screen.
 
 ## The landing page
 
-The call to action is a ball in front of a goal. Click or tap it, it curls
-into the net, the net bulges, the label flips to Goal and the page moves to
-plan.html. Roughly a second end to end. It is a button shaped like a ball,
-not a game, so it cannot be missed or failed.
+The call to action is a ball in front of a goal, sized as a hero element. On
+screens wider than 900px it sits opposite the headline on the right, roughly
+300 to 660px across depending on the window, with a soft radial behind it so
+it reads against the model. Below 900px it drops inline under the stats. A
+volt ring pulses off the ball every few seconds so the eye finds it before
+anyone reads the label.
+
+Click or tap it, it curls into the net, the net bulges, the label flips to
+Goal and the page moves to plan.html. Roughly a second end to end. It is a
+button shaped like a ball, not a game, so it cannot be missed or failed.
+
+Size is set by the .pitch rule. The goal column and the headline column are
+tuned not to collide: .pitch is clamp(300px,30vw,660px) against a .mid
+capped at min(48%,620px), which leaves at least 80px of gap from 901px wide
+all the way up. Change one and check the other.
 
 Underneath it there is a plain "or open the space plan" link for anyone who
 does not want the theatrics, and the whole animation is skipped for anyone
