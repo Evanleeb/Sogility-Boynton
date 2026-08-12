@@ -141,6 +141,20 @@ The flight path is the @keyframes flight rule. It is expressed as offsets
 from the ball's start point, so if you move the ball or the goal in the SVG
 you have to move the keyframes with it.
 
+## Phone header and Safari's toolbars
+
+The site header holds the wordmark on the left and the address on the right.
+On a phone the address wrapped to three lines and ran back into the wordmark
+and over the top of the model, so on narrow screens the header stacks
+instead, the address drops to one short line and the hero padding was raised
+to clear it.
+
+Safari's bottom toolbar floats over the page. The content column, the
+walkthrough control strip and the marquee all carry
+env(safe-area-inset-bottom) padding so nothing ends up underneath it. Anchor
+jumps use scroll-padding-top so the area schedule does not land behind the
+fixed header.
+
 ## On a phone
 
 The space plan detects a narrow screen and changes shape. The control row
