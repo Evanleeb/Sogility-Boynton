@@ -110,6 +110,15 @@ Click or tap it, it curls into the net, the net bulges, the label flips to
 Goal and the page moves to plan.html. Roughly a second end to end. It is a
 button shaped like a ball, not a game, so it cannot be missed or failed.
 
+On a phone: tap fires it the same way a click does. The SVG transforms use
+transform-box:fill-box so the ball rotates about its own centre in WebKit as
+well as Chrome, the hover wind up is gated behind @media (hover:hover) so an
+iOS tap goes straight to the kick instead of spending itself on a hover
+state, and touch-action:manipulation removes the double tap delay. With iOS
+Reduce Motion switched on the ball is a plain link and navigates instantly.
+The landing page scrolls on narrow screens rather than clipping, since the
+larger graphic can push the marquee past the fold on a small handset.
+
 Size is set by the .pitch rule. The goal column and the headline column are
 tuned not to collide: .pitch is clamp(300px,30vw,660px) against a .mid
 capped at min(48%,620px), which leaves at least 80px of gap from 901px wide
